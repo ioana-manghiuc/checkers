@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:views="clr-namespace:checkers_.Views"
         mc:Ignorable="d"
-        Title="Menus" Height="500" Width="400" ResizeMode="NoResize">
+        Title="menus" Height="500" Width="400" ResizeMode="NoResize">
     <Grid>
         <views:MenuView/>
     </Grid>

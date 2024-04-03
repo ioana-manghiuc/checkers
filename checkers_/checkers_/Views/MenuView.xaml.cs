@@ -25,6 +25,11 @@ namespace checkers_.Views
             InitializeComponent();
         }
 
+        private void NewGameBtnClick(object sender, RoutedEventArgs e)
+        {
+            GameWindow gameWindow = new GameWindow();
+            gameWindow.Show();
+        }   
         private void FileBtnClick(object sender, RoutedEventArgs e)
         {
             MainMenuView.Visibility = Visibility.Collapsed;           
@@ -39,26 +44,6 @@ namespace checkers_.Views
             StatisticsMenu.Visibility = Visibility.Collapsed;
             FileMenu.Visibility = Visibility.Collapsed;
             HelpMenu.Visibility = Visibility.Visible;
-        }
-        private void NewGameBtnClick(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("Button clicked!");
-        }
-
-        private void SaveBtnClick(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("Button clicked!");
-        }
-
-        private void OpenBtnClick(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("Button clicked!");
-        }
-
-       
-        private void MJumpBtnClick(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("Button clicked!");
         }
 
         private void StatsBtnClick(object sender, RoutedEventArgs e)

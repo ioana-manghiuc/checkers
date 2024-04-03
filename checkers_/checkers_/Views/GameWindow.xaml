@@ -4,9 +4,49 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:checkers_.Views"
+        xmlns:vm="clr-namespace:checkers_.ViewModels"
         mc:Ignorable="d"
-        Title="GameWindow" Height="800" Width="800" ResizeMode="NoResize">
-    <Grid>
+        Title="play checkers!" Height="600" Width="1000" ResizeMode="NoResize">
+
+    <Window.Resources>
+        <SolidColorBrush x:Key="burgundy" Color="#47060b"></SolidColorBrush>
+        <SolidColorBrush x:Key="beige" Color="#dbd4d1"></SolidColorBrush>
+    </Window.Resources>
+
+    <Window.DataContext>
+        <vm:GameViewModel/>
+    </Window.DataContext>
+    
+    <Grid Background="#dbd4d1">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="300"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+        <ItemsControl Name="Board" ItemsSource="{Binding GameBoard}" BorderThickness="3" BorderBrush="#6d5b60" Grid.Column="0" Margin="7" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <ItemsControl ItemsSource="{Binding}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Width="60" Height="60" BorderThickness="0">
+                                    <Image Source="{Binding STile.Image}" Stretch="UniformToFill"/>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+        <Grid Name="PlayerControl" Grid.Column="1">
+            
+        </Grid>
         
     </Grid>
 </Window>

@@ -1,7 +1,7 @@
 Creator: Ioana Manghiuc 
 Email: ioana.manghiuc@student.unitbv.ro 
 
-________________________________________
+___________________________________________________
 
 A game of checkers implemented in C# using the MVVM design pattern.
 

@@ -10,12 +10,26 @@
 
     <UserControl.Resources>
         <SolidColorBrush x:Key="burgundy" Color="#47060b"></SolidColorBrush>
-        <SolidColorBrush x:Key="beige" Color="#f5eee4"></SolidColorBrush>
+        <SolidColorBrush x:Key="beige" Color="#dbd4d1"></SolidColorBrush>
         <ImageBrush x:Key="BackButtonIcon" ImageSource="/checkers_;component/Resources/back.png"/>
-        <Style TargetType="ScrollViewer" x:Key="CustomScrollViewerStyle">
-            <Setter Property="Background" Value="{StaticResource beige}"/>
-            <Setter Property="Foreground" Value="{StaticResource burgundy}"/>
+
+        <Style x:Key="RoundedButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource burgundy}" />
+            <Setter Property="Foreground" Value="{StaticResource beige}" />
+            <Setter Property="FontSize" Value="24" />
+            <Setter Property="FontFamily" Value="Sitka Subheading Semibold" />
+            <Setter Property="Margin" Value="7" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="7">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
+            
     </UserControl.Resources>
 
     <UserControl.DataContext>
@@ -41,10 +55,9 @@
 
             <Label Content="checkers" Grid.Column="0" Grid.Row="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="7"
                FontSize="47" Grid.ColumnSpan="3" FontFamily="Sitka Subheading Semibold" Foreground="{StaticResource burgundy}"></Label>
-            <Button Name="FileBtn" Content="File" Grid.Column="1" Grid.Row="1" Margin="7" FontSize="24" FontFamily="Sitka Subheading Semibold"
-                Background="{StaticResource burgundy}" Foreground="{StaticResource beige}" Click="FileBtnClick"></Button>
-            <Button Name="HelpBtn" Content="Help" Grid.Column="1" Grid.Row="2" Margin="7" FontSize="24" FontFamily="Sitka Subheading Semibold"
-                Background="{StaticResource burgundy}" Foreground="{StaticResource beige}" Click="HelpBtnClick"></Button>
+            <Button Name="FileBtn" Content="File" Grid.Column="1" Grid.Row="1" Style="{StaticResource RoundedButtonStyle}" Click="FileBtnClick">
+            </Button>
+            <Button Name="HelpBtn" Content="Help" Grid.Column="1" Grid.Row="2" Style="{StaticResource RoundedButtonStyle}" Click="HelpBtnClick"></Button>
         </Grid>
 
         <!--new grid-->
@@ -56,7 +69,7 @@
                 <ColumnDefinition Width="60"></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="50"></RowDefinition>
+                <RowDefinition Height="70"></RowDefinition>
                 <RowDefinition Height="70"></RowDefinition>
                 <RowDefinition Height="70"></RowDefinition>
                 <RowDefinition Height="70"></RowDefinition>
@@ -65,28 +78,28 @@
                 <RowDefinition></RowDefinition>
             </Grid.RowDefinitions>
             <Button Name="BackFromFileBtn" Grid.Column="0" Grid.Row="0" HorizontalContentAlignment="Left" Background="{StaticResource BackButtonIcon}" 
-                    Click="BackToMainClick" Margin="7" BorderThickness="0" Width="30" Height="30"></Button>
-            <Button Name="NewGameBtn" Content="New Game" Grid.Column="1" Grid.Row="1" Margin="7" FontSize="24" FontFamily="Sitka Subheading Semibold"
-                Background="{StaticResource burgundy}" Foreground="{StaticResource beige}"></Button>
-            <Button Name="SaveBtn" Content="Save" Grid.Column="1" Grid.Row="2" Margin="7" FontSize="24" FontFamily="Sitka Subheading Semibold"
-                Background="{StaticResource burgundy}" Foreground="{StaticResource beige}"></Button>
-            <Button Name="OpenBtn" Content="Open" Grid.Column="1" Grid.Row="3" Margin="7" FontSize="24" FontFamily="Sitka Subheading Semibold"
-                Background="{StaticResource burgundy}" Foreground="{StaticResource beige}"></Button>
-            <Button Name="MJumpBtn" Content="Allow Multiple Jump" Grid.Column="1" Grid.Row="4" Margin="7" FontSize="24" FontFamily="Sitka Subheading Semibold"
-                Background="{StaticResource burgundy}" Foreground="{StaticResource beige}"></Button>
-            <Button Name="StatsBtn" Content="Statistics" Grid.Column="1" Grid.Row="5" Margin="5" FontSize="24" FontFamily="Sitka Subheading Semibold"
-                Background="{StaticResource burgundy}" Foreground="{StaticResource beige}" Click="StatsBtnClick"></Button>
+                    Click="BackToMainClick" Margin="0,5,0,0" BorderThickness="0" Width="50" Height="50"></Button>
+            
+            <Button Name="NewGameBtn" Content="New Game" Grid.Column="1" Grid.Row="1" Style="{StaticResource RoundedButtonStyle}" Click="NewGameBtnClick"></Button>
+            
+            <Button Name="SaveBtn" Content="Save" Grid.Column="1" Grid.Row="2" Style="{StaticResource RoundedButtonStyle}"></Button>
+            
+            <Button Name="OpenBtn" Content="Open" Grid.Column="1" Grid.Row="3" Style="{StaticResource RoundedButtonStyle}"></Button>
+            
+            <Button Name="MJumpBtn" Content="Allow Multiple Jump" Grid.Column="1" Grid.Row="4" Style="{StaticResource RoundedButtonStyle}"></Button>
+            
+            <Button Name="StatsBtn" Content="Statistics" Grid.Column="1" Grid.Row="5" Margin="5" Style="{StaticResource RoundedButtonStyle}" Click="StatsBtnClick"></Button>
         </Grid>
 
         <!--new grid-->
 
         <Grid Name="StatisticsMenu" Background="{StaticResource beige}" Visibility="Collapsed">
             <Grid.RowDefinitions>
-                <RowDefinition Height="80"></RowDefinition>
+                <RowDefinition Height="70"></RowDefinition>
                 <RowDefinition Height="*"></RowDefinition>
             </Grid.RowDefinitions>
             <Button Name="BackFromStatsBtn" Grid.Row="0" HorizontalContentAlignment="Left" HorizontalAlignment="Left" Background="{StaticResource BackButtonIcon}" 
-                Click="BackToFileClick" Margin="7" BorderThickness="0" Width="30" Height="30"></Button>
+                Click="BackToFileClick" Margin="5,5,0,0" BorderThickness="0" Width="50" Height="50"></Button>
             <Label Content="statistics here" Grid.Row="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="7"
                 FontSize="47" Grid.ColumnSpan="3" FontFamily="Sitka Subheading Semibold" Foreground="{StaticResource burgundy}"></Label>
         </Grid>
@@ -95,7 +108,7 @@
 
         <Grid Name="HelpMenu" Background="{StaticResource beige}" Visibility="Collapsed">
             <Grid.RowDefinitions>
-                <RowDefinition Height="80"></RowDefinition>
+                <RowDefinition Height="70"></RowDefinition>
                 <RowDefinition Height="*"></RowDefinition>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
@@ -103,10 +116,10 @@
                 <ColumnDefinition Width="*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <Button Name="BackFromHelpBtn" Grid.Column="0" Grid.Row="0" HorizontalContentAlignment="Left" HorizontalAlignment="Left" Background="{StaticResource BackButtonIcon}" 
-                Click="BackToMainClick" Margin="7" BorderThickness="0" Width="30" Height="30"></Button>
+                Click="BackToMainClick" Margin="5,5,0,0" BorderThickness="0" Width="50" Height="50"></Button>
             <Label Content="About" Grid.Column="1" Grid.Row="0" FontSize="47" FontFamily="Sitka Subheading Semibold" Foreground="{StaticResource burgundy}"
                    Margin="7"></Label>
-            <ScrollViewer Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" VerticalScrollBarVisibility="Auto" Style="{StaticResource CustomScrollViewerStyle}">
+            <ScrollViewer Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" VerticalScrollBarVisibility="Hidden">
                 <TextBlock Name="GameInfoBlock" FontSize="13" FontFamily="Sitka Subheading Semibold" Foreground="{StaticResource burgundy}" 
                     Margin="7" Text="{Binding AboutInfo}" TextWrapping="Wrap" ></TextBlock>
             </ScrollViewer>

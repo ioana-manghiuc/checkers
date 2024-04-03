@@ -1,17 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
-using System.Windows.Input;
-using checkers_.Commands;
-using checkers_.Views;
-
 
 namespace checkers_.ViewModels
 {
-    internal class MenuViewModel
+    class MenuViewModel
     {
         public string AboutInfo { get; }
 
