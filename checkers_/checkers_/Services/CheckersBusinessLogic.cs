@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Documents;
 using checkers_.Models;
 
@@ -12,10 +13,8 @@ namespace checkers_.Services
     class CheckersBusinessLogic
     {
         private ObservableCollection<ObservableCollection<Tile>> board;
-        private Tile firstTile, secondTile, simpleJumpTile;
+        private Tile firstTile, secondTile;
         private bool isFirstClick = true;
-        private int redPieces = 12;
-        private int blackPieces = 12;
         private int redCapturedBlack = 0;
         private int blackCapturedRed = 0;
         public int RedCapturedBlack { get { return redCapturedBlack; } set { redCapturedBlack = value; } }           
@@ -25,7 +24,7 @@ namespace checkers_.Services
             this.board = board;
         }      
 
-        private void SwapTilesContent(Tile first, Tile second)
+        private void SimpleMove(Tile first, Tile second)
         {
             string tempImage = first.Image;
             Tile.ETileType tempType = first.TileType;
@@ -35,28 +34,32 @@ namespace checkers_.Services
 
             second.Image = tempImage;
             second.TileType = tempType;
+
+            board[first.Line][first.Column] = first;
+            board[second.Line][second.Column] = second;
         }
 
         private bool MovementAllowed(Tile first, Tile second)
         {
             if (first.TileType == Tile.ETileType.Red)
             {
-                if ((first.Line - 1 == second.Line) && (first.Column - 1 == second.Column || first.Column + 1 == second.Column))
+                if (first.Line > second.Line && first.Column != second.Column && first.Line - second.Line <= 2)
                 {
                     return true;
                 }
             }
             else if (first.TileType == Tile.ETileType.Black)
             {
-                if ((first.Line + 1 == second.Line) && (first.Column - 1 == second.Column || first.Column + 1 == second.Column))
+                if (first.Line < second.Line && first.Column != second.Column && second.Line - first.Line <= 2)
                 {
                     return true;
                 }
             }
             else if(first.TileType == Tile.ETileType.RedKing || first.TileType == Tile.ETileType.BlackKing)
             {
-                if ((first.Line - 1 == second.Line || first.Line + 1 == second.Line) && 
-                    (first.Column - 1 == second.Column || first.Column + 1 == second.Column))
+                if ((first.Line > second.Line || first.Line < second.Line ) &&
+                    (first.Column != second.Column || first.Column != second.Column) &&
+                    (first.Line - second.Line <= 2 || second.Line - first.Line <= 2))
                 {
                     return true;
                 }
@@ -64,26 +67,41 @@ namespace checkers_.Services
             return false;
         }
 
-        // Multiple jump
-
-        private void CapturePiece(Tile first, Tile second) // capture should be a simple jump. im so done.
+        private void SimpleJump(Tile first, Tile second)
         {
-            if (first.TileType == Tile.ETileType.Red)
-            {
-                blackPieces--;
-                RedCapturedBlack++;
-            }
-            if(first.TileType == Tile.ETileType.Black)
-            {
-                redPieces--;
-                BlackCapturedRed++;
-            }
+            Console.WriteLine("enterted simple jump code");
+            int rowDiff = second.Line - first.Line;
+            int colDiff = second.Column - first.Column;
+            int capturedRow = first.Line + rowDiff / 2;
+            int capturedCol = first.Column + colDiff / 2;
 
-            second.TileType = first.TileType;
-            second.Image = first.Image;
-            first.TileType = Tile.ETileType.Empty;
-            first.Image = "/checkers_;component/Resources/empty_cell.png";
+            Tile tileToCapture = board[capturedRow][capturedCol];
+            tileToCapture.TileType = board[capturedRow][capturedCol].TileType;
+
+            if (tileToCapture.TileType != first.TileType && tileToCapture.TileType != Tile.ETileType.Empty)
+            {
+                Console.WriteLine("enterted if");
+                if (first.TileType == Tile.ETileType.Red || first.TileType == Tile.ETileType.RedKing)
+                    RedCapturedBlack++;
+                else if (first.TileType == Tile.ETileType.Black || first.TileType == Tile.ETileType.BlackKing)
+                    BlackCapturedRed++;
+
+                second.TileType = first.TileType;
+                second.Image = first.Image;
+                first.TileType = Tile.ETileType.Empty;
+                first.Image = "/checkers_;component/Resources/empty_cell.png";
+
+                board[first.Line][first.Column] = first;
+                board[second.Line][second.Column] = second;
+                board[capturedRow][capturedCol].TileType = Tile.ETileType.Empty;
+                board[capturedRow][capturedCol].Image = "/checkers_;component/Resources/empty_cell.png";
+            }
+            else
+            {
+                MessageBox.Show("you can't move there!", "", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
+
         public void SwapTiles(Tile tile)
         {
             if (isFirstClick)
@@ -102,14 +120,34 @@ namespace checkers_.Services
                     if (MovementAllowed(firstTile, secondTile))
                     {
                         if (secondTile.TileType == Tile.ETileType.Empty)
-                        {
-                            board[firstTile.Line][firstTile.Column].Line = secondTile.Line;
-                            board[firstTile.Line][firstTile.Column].Column = secondTile.Column;
-                            SwapTilesContent(firstTile, secondTile);
+                        {  
+                            // move conditions for men
+                            if ((firstTile.TileType == Tile.ETileType.Red && firstTile.Line - secondTile.Line == 1) ||
+                                (firstTile.TileType == Tile.ETileType.Black && secondTile.Line - firstTile.Line == 1))
+                            {
+                                SimpleMove(firstTile, secondTile);
+                            }
+                            if ((firstTile.TileType == Tile.ETileType.Black && secondTile.Line - firstTile.Line == 2) || 
+                                (firstTile.TileType == Tile.ETileType.Red && firstTile.Line - secondTile.Line == 2))
+                            {
+                                SimpleJump(firstTile, secondTile);
+                            }
+
+                            // move conditions for kings
+                            if ((firstTile.TileType == Tile.ETileType.RedKing || firstTile.TileType == Tile.ETileType.BlackKing) &&
+                                (firstTile.Line - secondTile.Line == 1 || secondTile.Line - firstTile.Line == 1))
+                            {
+                                SimpleMove(firstTile, secondTile);
+                            }
+                            if ((firstTile.TileType == Tile.ETileType.RedKing || firstTile.TileType == Tile.ETileType.BlackKing) &&
+                                (firstTile.Line - secondTile.Line == 2 || secondTile.Line - firstTile.Line == 2))
+                            {
+                                SimpleJump(firstTile, secondTile);
+                            }
                         }
-                        else if (secondTile.TileType != firstTile.TileType)
+                        else
                         {
-                            CapturePiece(firstTile, secondTile);
+                            MessageBox.Show("you can't move there!", "", MessageBoxButton.OK, MessageBoxImage.Error);
                         }
                         isFirstClick = true;
                     }
@@ -127,10 +165,9 @@ namespace checkers_.Services
                 tile.TileType = Tile.ETileType.BlackKing;
                 tile.Image = "/checkers_;component/Resources/king_black.png";
             }
-            Console.WriteLine("Red pieces: " + redPieces);
-            Console.WriteLine("Black pieces: " + blackPieces);
-            Console.WriteLine("Red captured black: " + redCapturedBlack);
-            Console.WriteLine("Black captured red: " + blackCapturedRed);
+
+            Console.WriteLine("Red captured black: " + RedCapturedBlack);
+            Console.WriteLine("Black captured red: " + BlackCapturedRed);
         }
         public void ClickAction(Tile tile)
         {
