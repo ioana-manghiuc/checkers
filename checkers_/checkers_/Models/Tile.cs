@@ -9,17 +9,33 @@ namespace checkers_.Models
 {
     class Tile : BaseNotification
     {
+        public enum ETileType 
+        {
+            None,
+            AlwaysEmpty,
+            Empty,
+            Red,
+            Black,
+            RedKing,
+            BlackKing
+        }
+
         public Tile() { Line = 0; Column = 0; Image = ""; }
         public Tile(int line, int column, string image)
         {
             Line = line;
             Column = column;
             Image = image;
-            //if (CanHavePiece && !HasPiece)
-            //{
-            //    Image = image;
-            //}
+
         }
+
+        public Tile(int line, int column, string image, ETileType type)
+        {
+            Line = line;
+            Column = column;
+            Image = image;
+            TileType = type;
+        }   
 
         private int line;
         public int Line
@@ -53,32 +69,18 @@ namespace checkers_.Models
                 NotifyPropertyChanged("Image");
             }
         }
-        bool HasPiece
-        {
-            get
-            {
-                if(Image == "/checkers_;component/Resources/empty_cell.png")
-                {
-                    return false; // does not have piece
-                }
-                else
-                {
-                    return true;
-                }
-            }       
-        }
 
+        private ETileType tileType;
 
-        bool CanHavePiece
+        public ETileType TileType
         {
-            get
+            get { return tileType; }
+            set
             {
-                if(Image == "/checkers_;component/Resources/always_empty_cell.png")
-                {
-                    return false;
-                }
-                return true;
+                tileType = value;
+                NotifyPropertyChanged("TileType");
             }
         }
+
     }
 }

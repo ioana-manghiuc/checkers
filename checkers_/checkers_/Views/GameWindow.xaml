@@ -6,11 +6,39 @@
         xmlns:local="clr-namespace:checkers_.Views"
         xmlns:vm="clr-namespace:checkers_.ViewModels"
         mc:Ignorable="d"
-        Title="play checkers!" Height="600" Width="1000" ResizeMode="NoResize">
+        Title="play checkers!" Height="650" Width="1000" ResizeMode="NoResize">
 
     <Window.Resources>
         <SolidColorBrush x:Key="burgundy" Color="#47060b"></SolidColorBrush>
         <SolidColorBrush x:Key="beige" Color="#dbd4d1"></SolidColorBrush>
+        <SolidColorBrush x:Key="blackpiece" Color="#1c070d"></SolidColorBrush>
+        <SolidColorBrush x:Key="redpiece" Color="#780d2d"></SolidColorBrush>
+
+        <Style x:Key="LabelStyle" TargetType="Label">
+            <Setter Property="Foreground" Value="{StaticResource burgundy}"></Setter>
+            <Setter Property="FontSize" Value="27" />
+            <Setter Property="FontFamily" Value="Sitka Subheading Semibold" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+        </Style>
+
+        <Style x:Key="BlackCapturedRedStyle" TargetType="Label">
+            <Setter Property="Foreground" Value="{StaticResource redpiece}"></Setter>
+            <Setter Property="FontSize" Value="57" />
+            <Setter Property="FontFamily" Value="Sitka Subheading Semibold" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+        </Style>
+
+        <Style x:Key="RedCapturedBlackStyle" TargetType="Label">
+            <Setter Property="Foreground" Value="{StaticResource blackpiece}"></Setter>
+            <Setter Property="FontSize" Value="57" />
+            <Setter Property="FontFamily" Value="Sitka Subheading Semibold" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+        </Style>
+
     </Window.Resources>
 
     <Window.DataContext>
@@ -20,7 +48,7 @@
     <Grid Background="#dbd4d1">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"></ColumnDefinition>
-            <ColumnDefinition Width="300"></ColumnDefinition>
+            <ColumnDefinition Width="330"></ColumnDefinition>
         </Grid.ColumnDefinitions>
 
         <ItemsControl Name="Board" ItemsSource="{Binding GameBoard}" BorderThickness="3" BorderBrush="#6d5b60" Grid.Column="0" Margin="7" VerticalAlignment="Center" HorizontalAlignment="Center">
@@ -34,8 +62,14 @@
                         </ItemsControl.ItemsPanel>
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Border Width="60" Height="60" BorderThickness="0">
-                                    <Image Source="{Binding STile.Image}" Stretch="UniformToFill"/>
+                                <Border Width="70" Height="70" BorderThickness="0">
+                                    <Button Command="{Binding ClickCommand}" CommandParameter="{Binding STile}">
+                                        <Button.Template>
+                                            <ControlTemplate>
+                                                <Image Source="{Binding STile.Image}" Stretch="UniformToFill"/>
+                                            </ControlTemplate>
+                                        </Button.Template>
+                                    </Button>
                                 </Border>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
@@ -45,6 +79,23 @@
         </ItemsControl>
 
         <Grid Name="PlayerControl" Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition Width="230"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="130"></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition Height="30"></RowDefinition>
+                <RowDefinition Height="130"></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+
+            <Label Content="captured red&#x0a;    pieces: " Grid.Column="1" Grid.Row="0" Style="{StaticResource LabelStyle}"></Label>
+            <Label Content="{Binding BlackCapturedRed}" Grid.Column="1" Grid.Row="1" Style="{StaticResource BlackCapturedRedStyle}"></Label>
+            <Label Content="captured black&#x0a;    pieces: " Grid.Column="1" Grid.Row="3" Style="{StaticResource LabelStyle}"></Label>
+            <Label Content="{Binding RedCapturedBlack}" Grid.Column="1" Grid.Row="4" Style="{StaticResource RedCapturedBlackStyle}"></Label>
+            
             
         </Grid>
         

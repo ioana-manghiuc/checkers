@@ -3,14 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using checkers_.Models;
 using checkers_.Services;
+using checkers_.Commands;
 
 namespace checkers_.ViewModels
 {
-    internal class TileViewModel
+    class TileViewModel
     {
-        CheckersBusinessLogic cbl;
+        private Tile sTile;
+        private int redCapturedBlack;
+        private int blackCapturedRed;
+        private ICommand clickCommand;
+        private CheckersBusinessLogic cbl;
 
         public TileViewModel(int line, int column, string photo, CheckersBusinessLogic cbl)
         {
@@ -18,6 +24,43 @@ namespace checkers_.ViewModels
             this.cbl = cbl;
         }
 
-        public Tile STile { get; set; }
+        public TileViewModel(int line, int column, string photo, Tile.ETileType type, CheckersBusinessLogic cbl)
+        {
+            STile = new Tile(line, column, photo, type);
+            this.cbl = cbl;
+            RedCapturedBlack = cbl.RedCapturedBlack;
+            BlackCapturedRed = cbl.BlackCapturedRed;
+        }
+
+        public Tile STile
+        {
+            get { return sTile; }
+            set { sTile = value; }
+        }
+
+        public int RedCapturedBlack
+        {
+            get { return redCapturedBlack; }
+            set { redCapturedBlack = value; }
+        }
+
+        public int BlackCapturedRed
+        {
+            get { return blackCapturedRed; }
+            set { blackCapturedRed = value; }
+        }
+
+        public ICommand ClickCommand
+        {
+            get
+            {
+                if (clickCommand == null)
+                {
+                    clickCommand = new RelayCommand<Tile>(cbl.ClickAction);
+                }
+                return clickCommand;
+            }
+        }
     }
+
 }
