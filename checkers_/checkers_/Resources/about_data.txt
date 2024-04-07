@@ -13,5 +13,5 @@ The game ends when one of the players has no more pieces on the board, thus the 
 
 The two main menus are:
 
-1. File with the submenu: New Game, Save (the current game), Open (a saved game), Allow Multiple Jumps, Statistics.
-2. Help with the submenu: About (contains information about the game).
+1. File, with the submenu: New Game, Save (the current game), Open (a saved game), Allow Multiple Jumps, Statistics.
+2. Help, with the submenu: About (contains information about the game - you are here!).

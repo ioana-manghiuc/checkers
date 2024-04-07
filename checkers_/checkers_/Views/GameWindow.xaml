@@ -22,54 +22,20 @@
             <Setter Property="HorizontalAlignment" Value="Center" />
         </Style>
 
-        <Style x:Key="BlackCapturedRedStyle" TargetType="TextBlock">
-            <Setter Property="Foreground" Value="{StaticResource redpiece}"></Setter>
+        <Style x:Key="Score" TargetType="TextBlock">
             <Setter Property="FontSize" Value="57" />
             <Setter Property="FontFamily" Value="Sitka Subheading Semibold" />
             <Setter Property="HorizontalAlignment" Value="Center" />
             <Setter Property="VerticalAlignment" Value="Top" />
         </Style>
 
-        <Style x:Key="RedCapturedBlackStyle" TargetType="TextBlock">
-            <Setter Property="Foreground" Value="{StaticResource blackpiece}"></Setter>
-            <Setter Property="FontSize" Value="57" />
-            <Setter Property="FontFamily" Value="Sitka Subheading Semibold" />
-            <Setter Property="HorizontalAlignment" Value="Center" />
-            <Setter Property="VerticalAlignment" Value="Top" />
-        </Style>
-
-        <Style x:Key="BlackWin" TargetType="TextBlock">
-            <Setter Property="Foreground" Value="{StaticResource blackpiece}"></Setter>
+        <Style x:Key="Messages" TargetType="TextBlock">
             <Setter Property="FontSize" Value="41" />
             <Setter Property="FontFamily" Value="Sitka Subheading Semibold" />
             <Setter Property="HorizontalAlignment" Value="Center" />
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
-
-        <Style x:Key="RedWin" TargetType="TextBlock">
-            <Setter Property="Foreground" Value="{StaticResource redpiece}"></Setter>
-            <Setter Property="FontSize" Value="41" />
-            <Setter Property="FontFamily" Value="Sitka Subheading Semibold" />
-            <Setter Property="HorizontalAlignment" Value="Center" />
-            <Setter Property="VerticalAlignment" Value="Center" />
-        </Style>
-
-        <Style x:Key="RedTurn" TargetType="TextBlock">
-            <Setter Property="Foreground" Value="{StaticResource redpiece}"></Setter>
-            <Setter Property="FontSize" Value="41" />
-            <Setter Property="FontFamily" Value="Sitka Subheading Semibold" />
-            <Setter Property="HorizontalAlignment" Value="Center" />
-            <Setter Property="VerticalAlignment" Value="Center" />
-        </Style>
-
-        <Style x:Key="BlackTurn" TargetType="TextBlock">
-            <Setter Property="Foreground" Value="{StaticResource blackpiece}"></Setter>
-            <Setter Property="FontSize" Value="41" />
-            <Setter Property="FontFamily" Value="Sitka Subheading Semibold" />
-            <Setter Property="HorizontalAlignment" Value="Center" />
-            <Setter Property="VerticalAlignment" Value="Center" />
-        </Style>
-
+        
     </Window.Resources>
 
     <Window.DataContext>
@@ -123,14 +89,14 @@
             </Grid.RowDefinitions>
 
             <Label Content="score" Grid.Column="1" Grid.Row="0" Style="{StaticResource LabelStyle}"></Label>
-            <TextBlock Text="{Binding BlackCapturedRed}" Grid.Column="1" Grid.Row="1" Style="{StaticResource BlackCapturedRedStyle}"></TextBlock>
-            <TextBlock Text="{Binding BlackTurn}" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Style="{StaticResource BlackTurn}"></TextBlock>
-            <TextBlock Text="{Binding BlackWin}" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Style="{StaticResource BlackWin}"></TextBlock>
+            <TextBlock Text="{Binding BlackCapturedRed}" Grid.Column="1" Grid.Row="1" Style="{StaticResource Score}" Foreground="{StaticResource redpiece}"></TextBlock>
+            <TextBlock Text="{Binding BlackTurn}" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Style="{StaticResource Messages}" Foreground="{StaticResource blackpiece}"></TextBlock>
+            <TextBlock Text="{Binding BlackWin}" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Style="{StaticResource Messages}" Foreground="{StaticResource blackpiece}"></TextBlock>
             
             <Label Content="score" Grid.Column="1" Grid.Row="3" Style="{StaticResource LabelStyle}"></Label>
-            <TextBlock Text="{Binding RedCapturedBlack}" Grid.Column="1" Grid.Row="4" Style="{StaticResource RedCapturedBlackStyle}"></TextBlock>
-            <TextBlock Text="{Binding RedTurn}" Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2"  Style="{StaticResource RedTurn}"></TextBlock>
-            <TextBlock Text="{Binding RedWin}" Grid.Column="0" Grid.Row="4"  Grid.ColumnSpan="2" Style="{StaticResource RedWin}"></TextBlock>
+            <TextBlock Text="{Binding RedCapturedBlack}" Grid.Column="1" Grid.Row="4" Style="{StaticResource Score}" Foreground="{StaticResource blackpiece}"></TextBlock>
+            <TextBlock Text="{Binding RedTurn}" Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2"  Style="{StaticResource Messages}" Foreground="{StaticResource redpiece}"></TextBlock>
+            <TextBlock Text="{Binding RedWin}" Grid.Column="0" Grid.Row="4"  Grid.ColumnSpan="2" Style="{StaticResource Messages}" Foreground="{StaticResource redpiece}"></TextBlock>
 
         </Grid>
         

@@ -15,6 +15,7 @@ namespace checkers_.Services
     {
         private ObservableCollection<ObservableCollection<Tile>> board;
         private GameViewModel gvm;
+        private StatisticsHelper sh = new StatisticsHelper();
         private Tile firstTile, secondTile;
         private bool isFirstClick = true;
         private int redCapturedBlack = 0;
@@ -120,6 +121,7 @@ namespace checkers_.Services
                         gvm.RedTurn = "";
                         gvm.BlackTurn = ""; 
                         gvm.RedWin = "RED WINS";
+                        sh.SaveStatistics(false, true, gvm.RedPieces);
                     }
                 }
                 else if (first.TileType == Tile.ETileType.Black || first.TileType == Tile.ETileType.BlackKing)
@@ -130,7 +132,8 @@ namespace checkers_.Services
                     {
                         gvm.RedTurn = "";
                         gvm.BlackTurn = "";
-                        gvm.BlackWin = "BLACK WINS";                        
+                        gvm.BlackWin = "BLACK WINS";
+                        sh.SaveStatistics(true, false, gvm.BlackPieces);
                     }
                 }
 

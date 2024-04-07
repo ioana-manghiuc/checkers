@@ -14,6 +14,22 @@ namespace checkers_.ViewModels
     class GameViewModel : BaseNotification
     {
         private CheckersBusinessLogic cbl;
+
+        public GameViewModel()
+        {
+            ObservableCollection<ObservableCollection<Tile>> board = SourceHelper.InitializeGameBoard();
+            cbl = new CheckersBusinessLogic(board, this);
+            GameBoard = CellBoardToCellVMBoard(board);
+            RedCapturedBlack = cbl.RedCapturedBlack;
+            BlackCapturedRed = cbl.BlackCapturedRed;
+            RedPieces = cbl.RedPieces;
+            BlackPieces = cbl.BlackPieces;
+            RedWin = cbl.RedWin;
+            BlackWin = cbl.BlackWin;
+            RedTurn = cbl.RedsTurn;
+            BlackTurn = cbl.BlackTurn;
+        }
+
         private int redCapturedBlack = 0;
         public int RedCapturedBlack
         {
@@ -125,21 +141,7 @@ namespace checkers_.ViewModels
             }
         }
 
-        public GameViewModel()
-        {
-            ObservableCollection<ObservableCollection<Tile>> board = SourceHelper.InitializeGameBoard();
-            cbl = new CheckersBusinessLogic(board, this);
-            GameBoard = CellBoardToCellVMBoard(board);
-            RedCapturedBlack = cbl.RedCapturedBlack;
-            BlackCapturedRed = cbl.BlackCapturedRed;
-            RedPieces = cbl.RedPieces;
-            BlackPieces = cbl.BlackPieces;
-            RedWin = cbl.RedWin;
-            BlackWin = cbl.BlackWin;
-            RedTurn = cbl.RedsTurn;
-            BlackTurn = cbl.BlackTurn;
-        }
-
+      
         private ObservableCollection<ObservableCollection<TileViewModel>> CellBoardToCellVMBoard(ObservableCollection<ObservableCollection<Tile>> board)
         {
             ObservableCollection<ObservableCollection<TileViewModel>> result = new ObservableCollection<ObservableCollection<TileViewModel>>();

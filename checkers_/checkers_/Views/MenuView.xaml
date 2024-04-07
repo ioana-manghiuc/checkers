@@ -11,6 +11,8 @@
     <UserControl.Resources>
         <SolidColorBrush x:Key="burgundy" Color="#47060b"></SolidColorBrush>
         <SolidColorBrush x:Key="beige" Color="#dbd4d1"></SolidColorBrush>
+        <SolidColorBrush x:Key="blackpiece" Color="#1c070d"></SolidColorBrush>
+        <SolidColorBrush x:Key="redpiece" Color="#780d2d"></SolidColorBrush>
         <ImageBrush x:Key="BackButtonIcon" ImageSource="/checkers_;component/Resources/back.png"/>
         <ImageBrush x:Key="MainView" ImageSource="/checkers_;component/Resources/main_view.png"/>
 
@@ -30,12 +32,23 @@
                 </Setter.Value>
             </Setter>
         </Style>
-            
-    </UserControl.Resources>
 
-    <UserControl.DataContext>
-        <vm:MenuViewModel/>
-    </UserControl.DataContext>
+        <Style x:Key="SmallerText" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource burgundy}"></Setter>
+            <Setter Property="FontSize" Value="27" />
+            <Setter Property="FontFamily" Value="Sitka Subheading Semibold" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+        </Style>
+
+        <Style x:Key="Messages" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="37" />
+            <Setter Property="FontFamily" Value="Sitka Subheading Semibold" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
+    </UserControl.Resources>
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -111,20 +124,47 @@
 
         <!--new grid-->
 
-        <Grid Name="StatisticsMenu" Background="{StaticResource beige}" Visibility="Collapsed">
+        <Grid Name="StatisticsMenu" Background="{StaticResource beige}" Visibility="Visible">
+            
+            <Grid.DataContext>
+                <vm:StatisticsViewModel/>
+            </Grid.DataContext>
+            
             <Grid.RowDefinitions>
                 <RowDefinition Height="70"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="120"></RowDefinition>
+                <RowDefinition Height="60"></RowDefinition>
+                <RowDefinition Height="100"></RowDefinition>
+                <RowDefinition Height="120"></RowDefinition>
             </Grid.RowDefinitions>
+            
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            
             <Button Name="BackFromStatsBtn" Grid.Row="0" HorizontalContentAlignment="Left" HorizontalAlignment="Left" Background="{StaticResource BackButtonIcon}" 
                 Click="BackToFileClick" Margin="5,5,0,0" BorderThickness="0" Width="50" Height="50"></Button>
-            <Label Content="statistics here" Grid.Row="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="7"
-                FontSize="47" Grid.ColumnSpan="3" FontFamily="Sitka Subheading Semibold" Foreground="{StaticResource burgundy}"></Label>
+        
+            <TextBlock Text="BLACK WINS" Grid.Column="0" Grid.Row="1" TextWrapping="Wrap" Style="{StaticResource Messages}" Foreground="{StaticResource blackpiece}"></TextBlock>
+            <TextBlock Text="RED WINS" Grid.Column="1" Grid.Row="1" TextWrapping="Wrap" Style="{StaticResource Messages}" Foreground="{StaticResource redpiece}" Padding="13"></TextBlock>
+            <TextBlock Text="{Binding BlackWins}" Grid.Column="0" Grid.Row="2" Style="{StaticResource Messages}" Foreground="{StaticResource blackpiece}"></TextBlock>
+            <TextBlock Text="{Binding RedWins}" Grid.Column="1" Grid.Row="2" Style="{StaticResource Messages}" Foreground="{StaticResource redpiece}"></TextBlock>
+
+            <TextBlock Text="max. pieces left on board" Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" TextWrapping="Wrap" Style="{StaticResource SmallerText}"></TextBlock>
+            <TextBlock Text="{Binding MaxBlackPieces}" Grid.Column="0" Grid.Row="4" Style="{StaticResource Messages}" Foreground="{StaticResource blackpiece}" VerticalAlignment="Top"></TextBlock>
+            <TextBlock Text="{Binding MaxRedPieces}" Grid.Column="1" Grid.Row="4" Style="{StaticResource Messages}" Foreground="{StaticResource redpiece}" VerticalAlignment="Top"></TextBlock>
+
         </Grid>
         
         <!--new grid-->
 
         <Grid Name="HelpMenu" Background="{StaticResource beige}" Visibility="Collapsed">
+
+            <Grid.DataContext>
+                <vm:MenuViewModel/>
+            </Grid.DataContext>
+            
             <Grid.RowDefinitions>
                 <RowDefinition Height="70"></RowDefinition>
                 <RowDefinition Height="*"></RowDefinition>
@@ -133,6 +173,7 @@
                 <ColumnDefinition Width="60"></ColumnDefinition>
                 <ColumnDefinition Width="*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
+            
             <Button Name="BackFromHelpBtn" Grid.Column="0" Grid.Row="0" HorizontalContentAlignment="Left" HorizontalAlignment="Left" Background="{StaticResource BackButtonIcon}" 
                 Click="BackToMainClick" Margin="5,5,0,0" BorderThickness="0" Width="50" Height="50"></Button>
             <Label Content="About" Grid.Column="1" Grid.Row="0" FontSize="47" FontFamily="Sitka Subheading Semibold" Foreground="{StaticResource burgundy}"
