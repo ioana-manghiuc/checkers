@@ -6,12 +6,15 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
+using checkers_.Commands;
 
 namespace checkers_.ViewModels
 {
     class GameViewModel : BaseNotification
     {
-        private int redCapturedBlack;
+        private CheckersBusinessLogic cbl;
+        private int redCapturedBlack = 0;
         public int RedCapturedBlack
         {
             get { return redCapturedBlack; }
@@ -20,12 +23,12 @@ namespace checkers_.ViewModels
                 if (value != redCapturedBlack)
                 {
                     redCapturedBlack = value;
-                    NotifyPropertyChanged();
+                    NotifyPropertyChanged("redCapturedBlack");
                 }
             }
         }
 
-        private int blackCapturedRed;
+        private int blackCapturedRed = 0;
         public int BlackCapturedRed
         {
             get { return blackCapturedRed; }
@@ -34,18 +37,107 @@ namespace checkers_.ViewModels
                 if (value != blackCapturedRed)
                 {
                     blackCapturedRed = value;
-                    NotifyPropertyChanged();
+                    NotifyPropertyChanged("blackCapturedRed");
                 }
             }
         }
 
-        private CheckersBusinessLogic cbl;
+        private int redPieces = 12;
+        public int RedPieces
+        {
+            get { return redPieces; }
+            set
+            {
+                if (value != redPieces)
+                {
+                    redPieces = value;
+                    NotifyPropertyChanged("RedPieces");
+                }
+            }
+        }
+
+        private int blackPieces = 12;
+        public int BlackPieces
+        {
+            get { return blackPieces; }
+            set
+            {
+                if (value != blackPieces)
+                {
+                    blackPieces = value;
+                    NotifyPropertyChanged("BlackPieces");
+                }
+            }
+        }
+
+       private string redWin = "";
+       public string RedWin
+        {
+            get { return redWin; }
+            set
+            {
+                if (value != redWin)
+                {
+                    redWin = value;
+                    NotifyPropertyChanged("RedWin");
+                }
+            }
+        }
+
+        private string blackWin = "";
+        public string BlackWin
+        {
+            get { return blackWin; }
+            set
+            {
+                if (value != blackWin)
+                {
+                    blackWin = value;
+                    NotifyPropertyChanged("BlackWin");
+                }
+            }
+        }
+
+        private string redTurn = "";
+        public string RedTurn
+        {
+            get { return redTurn; }
+            set
+            {
+                if (value != redTurn)
+                {
+                    redTurn = value;
+                    NotifyPropertyChanged("RedTurn");
+                }
+            }
+        }
+        public string blackTurn = "";
+        public string BlackTurn
+        {
+            get { return blackTurn; }
+            set
+            {
+                if (value != blackTurn)
+                {
+                    blackTurn = value;
+                    NotifyPropertyChanged("BlackTurn");
+                }
+            }
+        }
 
         public GameViewModel()
         {
             ObservableCollection<ObservableCollection<Tile>> board = SourceHelper.InitializeGameBoard();
-            cbl = new CheckersBusinessLogic(board);
+            cbl = new CheckersBusinessLogic(board, this);
             GameBoard = CellBoardToCellVMBoard(board);
+            RedCapturedBlack = cbl.RedCapturedBlack;
+            BlackCapturedRed = cbl.BlackCapturedRed;
+            RedPieces = cbl.RedPieces;
+            BlackPieces = cbl.BlackPieces;
+            RedWin = cbl.RedWin;
+            BlackWin = cbl.BlackWin;
+            RedTurn = cbl.RedsTurn;
+            BlackTurn = cbl.BlackTurn;
         }
 
         private ObservableCollection<ObservableCollection<TileViewModel>> CellBoardToCellVMBoard(ObservableCollection<ObservableCollection<Tile>> board)

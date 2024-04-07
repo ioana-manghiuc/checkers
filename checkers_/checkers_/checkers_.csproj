@@ -118,6 +118,7 @@
     <Content Include="Resources\about_data.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Resources\main_view.png" />
     <Content Include="Resources\man_red.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

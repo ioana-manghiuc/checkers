@@ -18,25 +18,56 @@
             <Setter Property="Foreground" Value="{StaticResource burgundy}"></Setter>
             <Setter Property="FontSize" Value="27" />
             <Setter Property="FontFamily" Value="Sitka Subheading Semibold" />
-            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Bottom" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
         </Style>
 
-        <Style x:Key="BlackCapturedRedStyle" TargetType="Label">
+        <Style x:Key="BlackCapturedRedStyle" TargetType="TextBlock">
             <Setter Property="Foreground" Value="{StaticResource redpiece}"></Setter>
             <Setter Property="FontSize" Value="57" />
             <Setter Property="FontFamily" Value="Sitka Subheading Semibold" />
-            <Setter Property="VerticalContentAlignment" Value="Center" />
             <Setter Property="HorizontalAlignment" Value="Center" />
             <Setter Property="VerticalAlignment" Value="Top" />
         </Style>
 
-        <Style x:Key="RedCapturedBlackStyle" TargetType="Label">
+        <Style x:Key="RedCapturedBlackStyle" TargetType="TextBlock">
             <Setter Property="Foreground" Value="{StaticResource blackpiece}"></Setter>
             <Setter Property="FontSize" Value="57" />
             <Setter Property="FontFamily" Value="Sitka Subheading Semibold" />
-            <Setter Property="VerticalContentAlignment" Value="Center" />
             <Setter Property="HorizontalAlignment" Value="Center" />
             <Setter Property="VerticalAlignment" Value="Top" />
+        </Style>
+
+        <Style x:Key="BlackWin" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource blackpiece}"></Setter>
+            <Setter Property="FontSize" Value="41" />
+            <Setter Property="FontFamily" Value="Sitka Subheading Semibold" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
+        <Style x:Key="RedWin" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource redpiece}"></Setter>
+            <Setter Property="FontSize" Value="41" />
+            <Setter Property="FontFamily" Value="Sitka Subheading Semibold" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
+        <Style x:Key="RedTurn" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource redpiece}"></Setter>
+            <Setter Property="FontSize" Value="41" />
+            <Setter Property="FontFamily" Value="Sitka Subheading Semibold" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
+        <Style x:Key="BlackTurn" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource blackpiece}"></Setter>
+            <Setter Property="FontSize" Value="41" />
+            <Setter Property="FontFamily" Value="Sitka Subheading Semibold" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
 
     </Window.Resources>
@@ -81,22 +112,26 @@
         <Grid Name="PlayerControl" Grid.Column="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition></ColumnDefinition>
-                <ColumnDefinition Width="230"></ColumnDefinition>
+                <ColumnDefinition Width="200"></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="130"></RowDefinition>
+                <RowDefinition Height="100"></RowDefinition>
                 <RowDefinition></RowDefinition>
-                <RowDefinition Height="30"></RowDefinition>
-                <RowDefinition Height="130"></RowDefinition>
+                <RowDefinition Height="50"></RowDefinition>
+                <RowDefinition Height="90"></RowDefinition>
                 <RowDefinition></RowDefinition>
             </Grid.RowDefinitions>
 
-            <Label Content="captured red&#x0a;    pieces: " Grid.Column="1" Grid.Row="0" Style="{StaticResource LabelStyle}"></Label>
-            <Label Content="{Binding BlackCapturedRed}" Grid.Column="1" Grid.Row="1" Style="{StaticResource BlackCapturedRedStyle}"></Label>
-            <Label Content="captured black&#x0a;    pieces: " Grid.Column="1" Grid.Row="3" Style="{StaticResource LabelStyle}"></Label>
-            <Label Content="{Binding RedCapturedBlack}" Grid.Column="1" Grid.Row="4" Style="{StaticResource RedCapturedBlackStyle}"></Label>
+            <Label Content="score" Grid.Column="1" Grid.Row="0" Style="{StaticResource LabelStyle}"></Label>
+            <TextBlock Text="{Binding BlackCapturedRed}" Grid.Column="1" Grid.Row="1" Style="{StaticResource BlackCapturedRedStyle}"></TextBlock>
+            <TextBlock Text="{Binding BlackTurn}" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Style="{StaticResource BlackTurn}"></TextBlock>
+            <TextBlock Text="{Binding BlackWin}" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Style="{StaticResource BlackWin}"></TextBlock>
             
-            
+            <Label Content="score" Grid.Column="1" Grid.Row="3" Style="{StaticResource LabelStyle}"></Label>
+            <TextBlock Text="{Binding RedCapturedBlack}" Grid.Column="1" Grid.Row="4" Style="{StaticResource RedCapturedBlackStyle}"></TextBlock>
+            <TextBlock Text="{Binding RedTurn}" Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2"  Style="{StaticResource RedTurn}"></TextBlock>
+            <TextBlock Text="{Binding RedWin}" Grid.Column="0" Grid.Row="4"  Grid.ColumnSpan="2" Style="{StaticResource RedWin}"></TextBlock>
+
         </Grid>
         
     </Grid>

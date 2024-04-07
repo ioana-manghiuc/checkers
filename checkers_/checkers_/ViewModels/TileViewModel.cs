@@ -13,8 +13,6 @@ namespace checkers_.ViewModels
     class TileViewModel
     {
         private Tile sTile;
-        private int redCapturedBlack;
-        private int blackCapturedRed;
         private ICommand clickCommand;
         private CheckersBusinessLogic cbl;
 
@@ -28,8 +26,6 @@ namespace checkers_.ViewModels
         {
             STile = new Tile(line, column, photo, type);
             this.cbl = cbl;
-            RedCapturedBlack = cbl.RedCapturedBlack;
-            BlackCapturedRed = cbl.BlackCapturedRed;
         }
 
         public Tile STile
@@ -37,19 +33,6 @@ namespace checkers_.ViewModels
             get { return sTile; }
             set { sTile = value; }
         }
-
-        public int RedCapturedBlack
-        {
-            get { return redCapturedBlack; }
-            set { redCapturedBlack = value; }
-        }
-
-        public int BlackCapturedRed
-        {
-            get { return blackCapturedRed; }
-            set { blackCapturedRed = value; }
-        }
-
         public ICommand ClickCommand
         {
             get
@@ -61,6 +44,7 @@ namespace checkers_.ViewModels
                 return clickCommand;
             }
         }
+
     }
 
 }

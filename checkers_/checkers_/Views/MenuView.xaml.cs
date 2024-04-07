@@ -35,6 +35,7 @@ namespace checkers_.Views
             MainMenuView.Visibility = Visibility.Collapsed;           
             HelpMenu.Visibility = Visibility.Collapsed;
             StatisticsMenu.Visibility = Visibility.Collapsed;
+            OpenGameMenu.Visibility = Visibility.Collapsed;
             FileMenu.Visibility = Visibility.Visible;
         }
 
@@ -43,7 +44,17 @@ namespace checkers_.Views
             MainMenuView.Visibility = Visibility.Collapsed;           
             StatisticsMenu.Visibility = Visibility.Collapsed;
             FileMenu.Visibility = Visibility.Collapsed;
+            OpenGameMenu.Visibility = Visibility.Collapsed;
             HelpMenu.Visibility = Visibility.Visible;
+        }
+
+        private void OpenBtnClick(object sender, RoutedEventArgs e)
+        {
+            MainMenuView.Visibility = Visibility.Collapsed;
+            HelpMenu.Visibility = Visibility.Collapsed;
+            FileMenu.Visibility = Visibility.Collapsed;
+            StatisticsMenu.Visibility = Visibility.Collapsed;
+            OpenGameMenu.Visibility = Visibility.Visible;
         }
 
         private void StatsBtnClick(object sender, RoutedEventArgs e)
@@ -51,6 +62,7 @@ namespace checkers_.Views
             MainMenuView.Visibility = Visibility.Collapsed;
             HelpMenu.Visibility = Visibility.Collapsed;            
             FileMenu.Visibility = Visibility.Collapsed;
+            OpenGameMenu.Visibility = Visibility.Collapsed;
             StatisticsMenu.Visibility = Visibility.Visible;
         }
 
@@ -67,6 +79,7 @@ namespace checkers_.Views
             MainMenuView.Visibility = Visibility.Collapsed;
             HelpMenu.Visibility = Visibility.Collapsed;            
             StatisticsMenu.Visibility = Visibility.Collapsed;
+            OpenGameMenu.Visibility = Visibility.Collapsed;
             FileMenu.Visibility = Visibility.Visible;
         }
     }

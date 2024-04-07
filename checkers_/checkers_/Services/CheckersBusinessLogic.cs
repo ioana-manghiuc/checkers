@@ -7,22 +7,82 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Documents;
 using checkers_.Models;
+using checkers_.ViewModels;
 
 namespace checkers_.Services
 {
     class CheckersBusinessLogic
     {
         private ObservableCollection<ObservableCollection<Tile>> board;
+        private GameViewModel gvm;
         private Tile firstTile, secondTile;
         private bool isFirstClick = true;
         private int redCapturedBlack = 0;
         private int blackCapturedRed = 0;
+        private int redPieces = 12;
+        private int blackPieces = 12;
+        private bool redTurn = true;
         public int RedCapturedBlack { get { return redCapturedBlack; } set { redCapturedBlack = value; } }           
         public int BlackCapturedRed { get { return blackCapturedRed; } set { blackCapturedRed = value; } }
-        public CheckersBusinessLogic(ObservableCollection<ObservableCollection<Tile>> board)
+        public int RedPieces { get { return redPieces; } set { redPieces = value; } }
+        public int BlackPieces { get { return blackPieces; } set { blackPieces = value; } }
+        public string RedWin { get; set; }
+        public string BlackWin { get; set; }
+        public bool RedTurn { get { return redTurn; } set { redTurn = value; } }
+        public string RedsTurn { get; set; }
+        public string BlackTurn { get; set; }
+            
+        public CheckersBusinessLogic(ObservableCollection<ObservableCollection<Tile>> board, GameViewModel gameViewModel)
         {
             this.board = board;
+            this.gvm = gameViewModel;
+            RedsTurn = "RED TURN";
         }      
+
+        private bool MovementAllowed(Tile first, Tile second)
+        {
+
+            if (first.TileType == Tile.ETileType.Red && RedTurn)
+            {
+                if (first.Line > second.Line && first.Column != second.Column && first.Line - second.Line <= 2)
+                {
+                    return true;
+                }
+            }
+            else if (first.TileType == Tile.ETileType.Black && !RedTurn)
+            {
+                if (first.Line < second.Line && first.Column != second.Column && second.Line - first.Line <= 2)
+                {
+                    return true;
+                }
+            }
+            else if ((first.TileType == Tile.ETileType.RedKing && RedTurn) || (first.TileType == Tile.ETileType.BlackKing && !RedTurn))
+            {
+                if ((first.Line > second.Line || first.Line < second.Line) &&
+                    (first.Column != second.Column || first.Column != second.Column) &&
+                    (first.Line - second.Line <= 2 || second.Line - first.Line <= 2))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private void SwitchTurn(Tile one)
+        {
+            if (one.TileType == Tile.ETileType.Red || one.TileType == Tile.ETileType.RedKing)
+            {
+                RedTurn = false;
+                gvm.RedTurn = "";
+                gvm.BlackTurn = "BLACK TURN";
+            }
+            else if (one.TileType == Tile.ETileType.Black || one.TileType == Tile.ETileType.BlackKing)
+            {
+                RedTurn = true;
+                gvm.BlackTurn = "";
+                gvm.RedTurn = "RED TURN";
+            }
+        }
 
         private void SimpleMove(Tile first, Tile second)
         {
@@ -39,37 +99,8 @@ namespace checkers_.Services
             board[second.Line][second.Column] = second;
         }
 
-        private bool MovementAllowed(Tile first, Tile second)
-        {
-            if (first.TileType == Tile.ETileType.Red)
-            {
-                if (first.Line > second.Line && first.Column != second.Column && first.Line - second.Line <= 2)
-                {
-                    return true;
-                }
-            }
-            else if (first.TileType == Tile.ETileType.Black)
-            {
-                if (first.Line < second.Line && first.Column != second.Column && second.Line - first.Line <= 2)
-                {
-                    return true;
-                }
-            }
-            else if(first.TileType == Tile.ETileType.RedKing || first.TileType == Tile.ETileType.BlackKing)
-            {
-                if ((first.Line > second.Line || first.Line < second.Line ) &&
-                    (first.Column != second.Column || first.Column != second.Column) &&
-                    (first.Line - second.Line <= 2 || second.Line - first.Line <= 2))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
         private void SimpleJump(Tile first, Tile second)
         {
-            Console.WriteLine("enterted simple jump code");
             int rowDiff = second.Line - first.Line;
             int colDiff = second.Column - first.Column;
             int capturedRow = first.Line + rowDiff / 2;
@@ -80,11 +111,28 @@ namespace checkers_.Services
 
             if (tileToCapture.TileType != first.TileType && tileToCapture.TileType != Tile.ETileType.Empty)
             {
-                Console.WriteLine("enterted if");
                 if (first.TileType == Tile.ETileType.Red || first.TileType == Tile.ETileType.RedKing)
-                    RedCapturedBlack++;
+                {
+                    gvm.RedCapturedBlack++; 
+                    gvm.BlackPieces--;
+                    if(gvm.RedCapturedBlack == 12)
+                    {
+                        gvm.RedTurn = "";
+                        gvm.BlackTurn = ""; 
+                        gvm.RedWin = "RED WINS";
+                    }
+                }
                 else if (first.TileType == Tile.ETileType.Black || first.TileType == Tile.ETileType.BlackKing)
-                    BlackCapturedRed++;
+                {
+                    gvm.BlackCapturedRed++;
+                    gvm.RedPieces--;
+                    if (gvm.BlackCapturedRed == 12)
+                    {
+                        gvm.RedTurn = "";
+                        gvm.BlackTurn = "";
+                        gvm.BlackWin = "BLACK WINS";                        
+                    }
+                }
 
                 second.TileType = first.TileType;
                 second.Image = first.Image;
@@ -98,7 +146,7 @@ namespace checkers_.Services
             }
             else
             {
-                MessageBox.Show("you can't move there!", "", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("you can't move there! - jump", "", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -108,8 +156,19 @@ namespace checkers_.Services
             {
                 if (tile.TileType != Tile.ETileType.Empty && tile.TileType != Tile.ETileType.AlwaysEmpty)
                 {
-                    firstTile = tile;
-                    isFirstClick = false;
+                    if(RedTurn && (tile.TileType == Tile.ETileType.Black || tile.TileType == Tile.ETileType.BlackKing))
+                    {
+                        MessageBox.Show("it's red's turn!", "", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                    else if (!RedTurn && (tile.TileType == Tile.ETileType.Red || tile.TileType == Tile.ETileType.RedKing))
+                    {
+                        MessageBox.Show("it's black's turn!", "", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                    else
+                    {
+                        firstTile = tile;
+                        isFirstClick = false;
+                    }
                 }
             }
             else
@@ -117,10 +176,11 @@ namespace checkers_.Services
                 secondTile = tile;
                 if (secondTile.TileType != Tile.ETileType.AlwaysEmpty)
                 {
-                    if (MovementAllowed(firstTile, secondTile))
+                    if (MovementAllowed(firstTile, secondTile) && gvm.RedPieces != 0 && gvm.BlackPieces != 0)
                     {
                         if (secondTile.TileType == Tile.ETileType.Empty)
-                        {  
+                        {
+                            SwitchTurn(firstTile);
                             // move conditions for men
                             if ((firstTile.TileType == Tile.ETileType.Red && firstTile.Line - secondTile.Line == 1) ||
                                 (firstTile.TileType == Tile.ETileType.Black && secondTile.Line - firstTile.Line == 1))
@@ -143,13 +203,13 @@ namespace checkers_.Services
                                 (firstTile.Line - secondTile.Line == 2 || secondTile.Line - firstTile.Line == 2))
                             {
                                 SimpleJump(firstTile, secondTile);
-                            }
+                            }                           
                         }
                         else
                         {
                             MessageBox.Show("you can't move there!", "", MessageBoxButton.OK, MessageBoxImage.Error);
                         }
-                        isFirstClick = true;
+                        isFirstClick = true;                        
                     }
                 }
             }
@@ -165,9 +225,6 @@ namespace checkers_.Services
                 tile.TileType = Tile.ETileType.BlackKing;
                 tile.Image = "/checkers_;component/Resources/king_black.png";
             }
-
-            Console.WriteLine("Red captured black: " + RedCapturedBlack);
-            Console.WriteLine("Black captured red: " + BlackCapturedRed);
         }
         public void ClickAction(Tile tile)
         {
