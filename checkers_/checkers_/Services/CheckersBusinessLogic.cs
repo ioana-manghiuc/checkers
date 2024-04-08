@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Documents;
 using checkers_.Models;
 using checkers_.ViewModels;
+using static checkers_.Services.SourceHelper;
 
 namespace checkers_.Services
 {
@@ -15,6 +16,7 @@ namespace checkers_.Services
     {
         private ObservableCollection<ObservableCollection<Tile>> board;
         private GameViewModel gvm;
+        private SavedGameViewModel sgvm;
         private StatisticsHelper sh = new StatisticsHelper();
         private Tile firstTile, secondTile;
         private bool isFirstClick = true;
@@ -32,12 +34,43 @@ namespace checkers_.Services
         public bool RedTurn { get { return redTurn; } set { redTurn = value; } }
         public string RedsTurn { get; set; }
         public string BlackTurn { get; set; }
-            
+
+        public CheckersBusinessLogic(ObservableCollection<ObservableCollection<Tile>> board, SavedGameViewModel sgvm)
+        {
+            this.board = board;
+            this.sgvm = sgvm;
+            string xmlFilePath = "Resources/saved_games.xml"; 
+            GameInfo gameInfo = SourceHelper.ParseGameInfo(xmlFilePath);
+
+            if (gameInfo != null)
+            {
+                RedTurn = gameInfo.Turn;
+                if(RedTurn)
+                {
+                    BlackTurn = "";
+                    RedsTurn = "RED TURN";                  
+                }
+                else
+                {
+                    RedsTurn = "";
+                    BlackTurn = "BLACK TURN";
+                }
+                RedCapturedBlack = gameInfo.CapturedBlackPieces;
+                BlackCapturedRed = gameInfo.CapturedRedPieces;
+                RedPieces = gameInfo.RedPieces;
+                BlackPieces = gameInfo.BlackPieces;
+            }
+            else
+            {
+                Console.WriteLine("Error: Unable to parse game information.");
+            }
+        }
+
         public CheckersBusinessLogic(ObservableCollection<ObservableCollection<Tile>> board, GameViewModel gameViewModel)
         {
             this.board = board;
             this.gvm = gameViewModel;
-            RedsTurn = "RED TURN";
+            RedsTurn = "RED TURN";            
         }      
 
         private bool MovementAllowed(Tile first, Tile second)
@@ -74,14 +107,32 @@ namespace checkers_.Services
             if (one.TileType == Tile.ETileType.Red || one.TileType == Tile.ETileType.RedKing)
             {
                 RedTurn = false;
-                gvm.RedTurn = "";
-                gvm.BlackTurn = "BLACK TURN";
+                if (gvm != null)
+                {                   
+                    gvm.RedTurn = "";                   
+                    gvm.BlackTurn = "BLACK TURN";
+                    
+                }
+                else
+                {
+                    sgvm.RedTurn = "";
+                    sgvm.BlackTurn = "BLACK TURN";
+                }
+                
             }
             else if (one.TileType == Tile.ETileType.Black || one.TileType == Tile.ETileType.BlackKing)
             {
                 RedTurn = true;
-                gvm.BlackTurn = "";
-                gvm.RedTurn = "RED TURN";
+                if(gvm != null)
+                {
+                    gvm.BlackTurn = "";
+                    gvm.RedTurn = "RED TURN";
+                }
+                else
+                {
+                    sgvm.BlackTurn = "";
+                    sgvm.RedTurn = "RED TURN";
+                }                           
             }
         }
 
@@ -114,27 +165,57 @@ namespace checkers_.Services
             {
                 if (first.TileType == Tile.ETileType.Red || first.TileType == Tile.ETileType.RedKing)
                 {
-                    gvm.RedCapturedBlack++; 
-                    gvm.BlackPieces--;
-                    if(gvm.RedCapturedBlack == 12)
+                    if (gvm != null)
                     {
-                        gvm.RedTurn = "";
-                        gvm.BlackTurn = ""; 
-                        gvm.RedWin = "RED WINS";
-                        sh.SaveStatistics(false, true, gvm.RedPieces);
+                        gvm.RedCapturedBlack++;
+                        gvm.BlackPieces--;
+                        if (gvm.RedCapturedBlack == 12)
+                        {
+                            gvm.RedTurn = "";
+                            gvm.BlackTurn = "";
+                            gvm.RedWin = "RED WINS";
+                            sh.SaveStatistics(false, true, gvm.RedPieces);
+                        }
+                    }
+                    else
+                    {
+                        sgvm.RedCapturedBlack++;
+                        sgvm.BlackPieces--;
+                        if (sgvm.RedCapturedBlack == 12)
+                        {
+                            sgvm.RedTurn = "";
+                            sgvm.BlackTurn = "";
+                            sgvm.RedWin = "RED WINS";
+                            sh.SaveStatistics(false, true, sgvm.RedPieces);
+                        }
                     }
                 }
                 else if (first.TileType == Tile.ETileType.Black || first.TileType == Tile.ETileType.BlackKing)
                 {
-                    gvm.BlackCapturedRed++;
-                    gvm.RedPieces--;
-                    if (gvm.BlackCapturedRed == 12)
+                    if (gvm != null)
                     {
-                        gvm.RedTurn = "";
-                        gvm.BlackTurn = "";
-                        gvm.BlackWin = "BLACK WINS";
-                        sh.SaveStatistics(true, false, gvm.BlackPieces);
+                        gvm.BlackCapturedRed++;
+                        gvm.RedPieces--;
+                        if (gvm.BlackCapturedRed == 12)
+                        {
+                            gvm.RedTurn = "";
+                            gvm.BlackTurn = "";
+                            gvm.BlackWin = "BLACK WINS";
+                            sh.SaveStatistics(true, false, gvm.BlackPieces);
+                        }
                     }
+                    else
+                    {
+                        sgvm.BlackCapturedRed++;
+                        sgvm.RedPieces--;
+                        if (sgvm.BlackCapturedRed == 12)
+                        {
+                            sgvm.RedTurn = "";
+                            sgvm.BlackTurn = "";
+                            sgvm.BlackWin = "BLACK WINS";
+                            sh.SaveStatistics(true, false, sgvm.BlackPieces);
+                        }
+                    }                  
                 }
 
                 second.TileType = first.TileType;
@@ -179,7 +260,8 @@ namespace checkers_.Services
                 secondTile = tile;
                 if (secondTile.TileType != Tile.ETileType.AlwaysEmpty)
                 {
-                    if (MovementAllowed(firstTile, secondTile) && gvm.RedPieces != 0 && gvm.BlackPieces != 0)
+                    if (MovementAllowed(firstTile, secondTile) && 
+                            (( gvm != null && gvm.RedPieces != 0 && gvm.BlackPieces != 0  ) || (sgvm.RedPieces != 0 && sgvm.BlackPieces != 0 && sgvm != null)))
                     {
                         if (secondTile.TileType == Tile.ETileType.Empty)
                         {

@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<SavedGames>
+	<Game>
+		<Id>1</Id>
+		<Label>game 08-April-2024</Label>		
+		<Turn>False</Turn>
+		<BlackPieces>6</BlackPieces>
+		<RedPieces>8</RedPieces>
+		<CapturedBlackPieces>6</CapturedBlackPieces>
+		<CapturedRedPieces>4</CapturedRedPieces>		
+	</Game>
+</SavedGames>

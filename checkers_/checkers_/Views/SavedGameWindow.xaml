@@ -1,0 +1,104 @@
+﻿<Window x:Class="checkers_.Views.SavedGameWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:checkers_.Views"
+        xmlns:vm="clr-namespace:checkers_.ViewModels"
+        mc:Ignorable="d"
+       Title="play checkers!" Height="650" Width="1000" ResizeMode="NoResize">
+
+    <Window.Resources>
+        <SolidColorBrush x:Key="burgundy" Color="#47060b"></SolidColorBrush>
+        <SolidColorBrush x:Key="beige" Color="#dbd4d1"></SolidColorBrush>
+        <SolidColorBrush x:Key="blackpiece" Color="#1c070d"></SolidColorBrush>
+        <SolidColorBrush x:Key="redpiece" Color="#780d2d"></SolidColorBrush>
+
+        <Style x:Key="LabelStyle" TargetType="Label">
+            <Setter Property="Foreground" Value="{StaticResource burgundy}"></Setter>
+            <Setter Property="FontSize" Value="27" />
+            <Setter Property="FontFamily" Value="Sitka Subheading Semibold" />
+            <Setter Property="VerticalAlignment" Value="Bottom" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+        </Style>
+
+        <Style x:Key="Score" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="57" />
+            <Setter Property="FontFamily" Value="Sitka Subheading Semibold" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+        </Style>
+
+        <Style x:Key="Messages" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="41" />
+            <Setter Property="FontFamily" Value="Sitka Subheading Semibold" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
+    </Window.Resources>
+
+    <Window.DataContext>
+        <vm:SavedGameViewModel/>
+    </Window.DataContext>
+
+    <Grid Background="#dbd4d1">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="330"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+        <ItemsControl Name="Board" ItemsSource="{Binding SavedGameBoard}" BorderThickness="3" BorderBrush="#6d5b60" Grid.Column="0" Margin="7" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <ItemsControl ItemsSource="{Binding}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Width="70" Height="70" BorderThickness="0">
+                                    <Button Command="{Binding ClickCommand}" CommandParameter="{Binding STile}">
+                                        <Button.Template>
+                                            <ControlTemplate>
+                                                <Image Source="{Binding STile.Image}" Stretch="UniformToFill"/>
+                                            </ControlTemplate>
+                                        </Button.Template>
+                                    </Button>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+        <Grid Name="PlayerControl" Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition Width="200"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="100"></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition Height="50"></RowDefinition>
+                <RowDefinition Height="90"></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+
+            <Label Content="score" Grid.Column="1" Grid.Row="0" Style="{StaticResource LabelStyle}"></Label>
+            <TextBlock Text="{Binding BlackCapturedRed}" Grid.Column="1" Grid.Row="1" Style="{StaticResource Score}" Foreground="{StaticResource redpiece}"></TextBlock>
+            <TextBlock Text="{Binding BlackTurn}" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Style="{StaticResource Messages}" Foreground="{StaticResource blackpiece}"></TextBlock>
+            <TextBlock Text="{Binding BlackWin}" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Style="{StaticResource Messages}" Foreground="{StaticResource blackpiece}"></TextBlock>
+
+            <Label Content="score" Grid.Column="1" Grid.Row="3" Style="{StaticResource LabelStyle}"></Label>
+            <TextBlock Text="{Binding RedCapturedBlack}" Grid.Column="1" Grid.Row="4" Style="{StaticResource Score}" Foreground="{StaticResource blackpiece}"></TextBlock>
+            <TextBlock Text="{Binding RedTurn}" Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2"  Style="{StaticResource Messages}" Foreground="{StaticResource redpiece}"></TextBlock>
+            <TextBlock Text="{Binding RedWin}" Grid.Column="0" Grid.Row="4"  Grid.ColumnSpan="2" Style="{StaticResource Messages}" Foreground="{StaticResource redpiece}"></TextBlock>
+
+        </Grid>
+
+    </Grid>
+</Window>

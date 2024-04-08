@@ -124,7 +124,7 @@
 
         <!--new grid-->
 
-        <Grid Name="StatisticsMenu" Background="{StaticResource beige}" Visibility="Visible">
+        <Grid Name="StatisticsMenu" Background="{StaticResource beige}" Visibility="Collapsed">
             
             <Grid.DataContext>
                 <vm:StatisticsViewModel/>
@@ -179,7 +179,7 @@
             <Label Content="About" Grid.Column="1" Grid.Row="0" FontSize="47" FontFamily="Sitka Subheading Semibold" Foreground="{StaticResource burgundy}"
                    Margin="7"></Label>
             <ScrollViewer Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" VerticalScrollBarVisibility="Hidden">
-                <TextBlock Name="GameInfoBlock" FontSize="13" FontFamily="Sitka Subheading Semibold" Foreground="{StaticResource burgundy}" 
+                <TextBlock Name="GameInfoBlock" FontSize="14" FontFamily="Sitka Subheading Semibold" Foreground="{StaticResource burgundy}" 
                     Margin="7" Text="{Binding AboutInfo}" TextWrapping="Wrap" ></TextBlock>
             </ScrollViewer>
         </Grid>

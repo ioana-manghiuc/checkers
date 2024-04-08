@@ -55,6 +55,8 @@ namespace checkers_.Views
             FileMenu.Visibility = Visibility.Collapsed;
             StatisticsMenu.Visibility = Visibility.Collapsed;
             OpenGameMenu.Visibility = Visibility.Visible;
+            SavedGameWindow savedGameWindow = new SavedGameWindow();
+            savedGameWindow.Show();
         }
 
         private void StatsBtnClick(object sender, RoutedEventArgs e)
