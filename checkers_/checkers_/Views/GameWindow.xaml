@@ -36,6 +36,25 @@
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
         
+        <Style x:Key="RoundedButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#801c070d" />
+            <Setter Property="Foreground" Value="{StaticResource beige}" />
+            <Setter Property="FontSize" Value="24" />
+            <Setter Property="FontFamily" Value="Sitka Subheading Semibold" />
+            <Setter Property="Margin" Value="7" />
+            <Setter Property="Height" Value="60"></Setter>
+            <Setter Property="Width" Value="100"></Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="11">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
     </Window.Resources>
 
     <Window.DataContext>
@@ -88,6 +107,8 @@
                 <RowDefinition></RowDefinition>
             </Grid.RowDefinitions>
 
+            <Button Content="Save" Grid.Column="0" HorizontalAlignment="Left" Grid.ColumnSpan="2" VerticalAlignment="Bottom" Style="{StaticResource RoundedButtonStyle}"></Button>
+            
             <Label Content="score" Grid.Column="1" Grid.Row="0" Style="{StaticResource LabelStyle}"></Label>
             <TextBlock Text="{Binding BlackCapturedRed}" Grid.Column="1" Grid.Row="1" Style="{StaticResource Score}" Foreground="{StaticResource redpiece}"></TextBlock>
             <TextBlock Text="{Binding BlackTurn}" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Style="{StaticResource Messages}" Foreground="{StaticResource blackpiece}"></TextBlock>
@@ -101,4 +122,5 @@
         </Grid>
         
     </Grid>
+    
 </Window>

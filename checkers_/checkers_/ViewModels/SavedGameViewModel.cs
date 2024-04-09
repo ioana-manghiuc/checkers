@@ -15,7 +15,7 @@ namespace checkers_.ViewModels
 
         public SavedGameViewModel()
         {
-            ObservableCollection<ObservableCollection<Tile>> board = SourceHelper.RestoreGameBoard("Resources/saved_boards.xml");
+            ObservableCollection<ObservableCollection<Tile>> board = SourceHelper.RestoreGameBoardO();
             cbl = new CheckersBusinessLogic(board, this);
             SavedGameBoard = CellBoardToCellVMBoard(board);
             RedCapturedBlack = cbl.RedCapturedBlack;

@@ -3,10 +3,19 @@
 	<Game>
 		<Id>1</Id>
 		<Label>game 08-April-2024</Label>		
-		<Turn>False</Turn>
-		<BlackPieces>6</BlackPieces>
-		<RedPieces>8</RedPieces>
-		<CapturedBlackPieces>6</CapturedBlackPieces>
-		<CapturedRedPieces>4</CapturedRedPieces>		
+		<Turn>True</Turn>
+		<BlackPieces>1</BlackPieces>
+		<RedPieces>1</RedPieces>
+		<CapturedBlackPieces>11</CapturedBlackPieces>
+		<CapturedRedPieces>11</CapturedRedPieces>		
+	</Game>
+	<Game>
+		<Id>2</Id>
+		<Label>game 09-April-2024</Label>
+		<Turn>True</Turn>
+		<BlackPieces>1</BlackPieces>
+		<RedPieces>1</RedPieces>
+		<CapturedBlackPieces>11</CapturedBlackPieces>
+		<CapturedRedPieces>11</CapturedRedPieces>
 	</Game>
 </SavedGames>

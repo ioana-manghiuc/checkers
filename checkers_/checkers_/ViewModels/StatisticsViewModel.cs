@@ -5,13 +5,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using checkers_.Services;
+using System.Xml.Linq;
+using System.Windows.Input;
+using checkers_.Commands;
 
 namespace checkers_.ViewModels
 {
     class StatisticsViewModel : BaseNotification
     {
         private StatisticsHelper sh;
-
+        private ICommand reload;
         public StatisticsViewModel()
         {
             sh = new StatisticsHelper(this);
@@ -19,8 +22,30 @@ namespace checkers_.ViewModels
             RedWins = sh.RedWins;
             MaxBlackPieces = sh.MaxBlackPieces;
             MaxRedPieces = sh.MaxRedPieces;
+            sh.LoadStatistics();
         }
 
+        public StatisticsViewModel(StatisticsHelper sh)
+        {
+            this.sh = sh;
+            BlackWins = sh.BlackWins;
+            RedWins = sh.RedWins;
+            MaxBlackPieces = sh.MaxBlackPieces;
+            MaxRedPieces = sh.MaxRedPieces;
+        }
+
+        public ICommand ReloadData
+        {
+            get
+            {
+                if (reload == null)
+                {
+                   reload = new RelayCommand<string>(sh.ReloadStatistics);
+                }
+                return reload;
+            }
+
+        }
         private int blackWins = 0;
         public int BlackWins
         {

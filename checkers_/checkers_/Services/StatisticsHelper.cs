@@ -26,6 +26,7 @@ namespace checkers_.Services
 
         public StatisticsHelper()
         {
+            svm = new StatisticsViewModel(this);
             LoadStatistics();
         }
         public StatisticsHelper(StatisticsViewModel svm)
@@ -38,40 +39,50 @@ namespace checkers_.Services
         {
             XDocument doc = XDocument.Load("Resources/statistics.xml");
             var stats = doc.Descendants("Statistics").First();
-            BlackWins = int.Parse(stats.Element("BlackWins").Value);
-            RedWins = int.Parse(stats.Element("RedWins").Value);
-            MaxBlackPieces = int.Parse(stats.Element("MaxBlackPieces").Value);
-            MaxRedPieces = int.Parse(stats.Element("MaxRedPieces").Value);
+            svm.BlackWins = int.Parse(stats.Element("BlackWins").Value);
+            svm.RedWins = int.Parse(stats.Element("RedWins").Value);
+            svm.MaxBlackPieces = int.Parse(stats.Element("MaxBlackPieces").Value);
+            svm.MaxRedPieces = int.Parse(stats.Element("MaxRedPieces").Value);
+        }
+        public void ReloadStatistics(string filePath)
+        {
+            filePath = "Resources/statistics.xml";
+            XDocument doc = XDocument.Load(filePath);
+            var stats = doc.Descendants("Statistics").First();
+            svm.BlackWins = int.Parse(stats.Element("BlackWins").Value);
+            svm.RedWins = int.Parse(stats.Element("RedWins").Value);
+            svm.MaxBlackPieces = int.Parse(stats.Element("MaxBlackPieces").Value);
+            svm.MaxRedPieces = int.Parse(stats.Element("MaxRedPieces").Value);
         }
 
         public void SaveStatistics(bool blackState, bool redState, int winnersPieces)
         {
             if(blackState)
             {
-                BlackWins++;
+                svm.BlackWins++;
                 if(winnersPieces > MaxBlackPieces)
                 {
-                    MaxBlackPieces = winnersPieces;
+                    svm.MaxBlackPieces = winnersPieces;
                 }
             }
             else if(redState)
             {
-                RedWins++;
+                svm.RedWins++;
                 if(winnersPieces > MaxRedPieces)
                 {
-                    MaxRedPieces = winnersPieces;
+                    svm.MaxRedPieces = winnersPieces;
                 }
             }
 
             XDocument doc = XDocument.Load("Resources/statistics.xml");
             var stats = doc.Descendants("Statistics").First();
-            stats.Element("BlackWins").Value = BlackWins.ToString();
-            stats.Element("RedWins").Value = RedWins.ToString();
-            stats.Element("MaxBlackPieces").Value = MaxBlackPieces.ToString();
-            stats.Element("MaxRedPieces").Value = MaxRedPieces.ToString();
+            stats.Element("BlackWins").Value = svm.BlackWins.ToString();
+            stats.Element("RedWins").Value = svm.RedWins.ToString();
+            stats.Element("MaxBlackPieces").Value = svm.MaxBlackPieces.ToString();
+            stats.Element("MaxRedPieces").Value = svm.MaxRedPieces.ToString();
             doc.Save("Resources/statistics.xml");
 
-            LoadStatistics();
+            ReloadStatistics("Resources/statistics.xml");
         }
     }
 }

@@ -39,8 +39,7 @@ namespace checkers_.Services
         {
             this.board = board;
             this.sgvm = sgvm;
-            string xmlFilePath = "Resources/saved_games.xml"; 
-            GameInfo gameInfo = SourceHelper.ParseGameInfo(xmlFilePath);
+            GameInfo gameInfo = SourceHelper.GetGameWithID(SourceHelper.GameID);
 
             if (gameInfo != null)
             {
@@ -216,7 +215,7 @@ namespace checkers_.Services
                             sh.SaveStatistics(true, false, sgvm.BlackPieces);
                         }
                     }                  
-                }
+                }             
 
                 second.TileType = first.TileType;
                 second.Image = first.Image;
