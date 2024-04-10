@@ -1,4 +1,5 @@
-﻿using checkers_.Models;
+﻿using checkers_.Commands;
+using checkers_.Models;
 using checkers_.Services;
 using System;
 using System.Collections.Generic;
@@ -6,16 +7,21 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace checkers_.ViewModels
 {
     class SavedGameViewModel : BaseNotification
     {
         private CheckersBusinessLogic cbl;
+        public ObservableCollection<SourceHelper.GameInfo> Games { get; set; }
+        private ICommand selectGame;
+        private string gameLabel;
 
         public SavedGameViewModel()
         {
-            ObservableCollection<ObservableCollection<Tile>> board = SourceHelper.RestoreGameBoardO();
+            Games = SourceHelper.LoadAllGames();
+            ObservableCollection<ObservableCollection<Tile>> board = SourceHelper.RestoreGameBoard(SourceHelper.GameID); // Use the correct method
             cbl = new CheckersBusinessLogic(board, this);
             SavedGameBoard = CellBoardToCellVMBoard(board);
             RedCapturedBlack = cbl.RedCapturedBlack;
@@ -26,6 +32,18 @@ namespace checkers_.ViewModels
             BlackWin = cbl.BlackWin;
             RedTurn = cbl.RedsTurn;
             BlackTurn = cbl.BlackTurn;
+        }
+
+        public ICommand SelectGame
+        {
+            get
+            {
+                if (selectGame == null)
+                {
+                    selectGame = new RelayCommand<string>(SourceHelper.SelectGame);
+                }
+                return selectGame;
+            }
         }
 
         private int redCapturedBlack = 0;

@@ -108,7 +108,7 @@ namespace checkers_.Services
             }
         }
 
-        public static ObservableCollection<ObservableCollection<Tile>> RestoreGameBoardO()
+        public static ObservableCollection<ObservableCollection<Tile>> RestoreGameBoard(int gameID)
         {
             ObservableCollection<ObservableCollection<Tile>> board = new ObservableCollection<ObservableCollection<Tile>>();
 
@@ -126,7 +126,6 @@ namespace checkers_.Services
                         image = "/checkers_;component/Resources/empty_cell.png";
                         type = Tile.ETileType.Empty;
                     }
-
                     else
                     {
                         image = "/checkers_;component/Resources/always_empty_cell.png";
@@ -141,21 +140,23 @@ namespace checkers_.Services
 
             try
             {
-                XmlDocument doc = new XmlDocument();
-                doc.Load("Resources/saved_boards.xml");
+                XDocument doc = XDocument.Load("Resources/saved_boards.xml");
+                var gameNodes = doc.Root.Elements("Tiles").Where(node => (int)node.Element("GameID") == gameID);
 
-                XmlNodeList tileNodes = doc.SelectNodes("/SavedBoards/Tiles/Tile");
-
-                foreach (XmlNode tileNode in tileNodes)
+                foreach (var gameNode in gameNodes)
                 {
-                    int line = int.Parse(tileNode.SelectSingleNode("Line").InnerText);
-                    int column = int.Parse(tileNode.SelectSingleNode("Column").InnerText);
-                    string tileTypeStr = tileNode.SelectSingleNode("TileType").InnerText;
+                    foreach (var tileNode in gameNode.Elements("Tile"))
+                    {
+                        int line = int.Parse(tileNode.Element("Line").Value);
+                        int column = int.Parse(tileNode.Element("Column").Value);
+                        string tileTypeStr = tileNode.Element("TileType").Value;
 
-                    Tile.ETileType type = (Tile.ETileType)Enum.Parse(typeof(Tile.ETileType), tileTypeStr);
-                    string image = GetImagePath(type);
-                    Tile tile = new Tile(line, column, image, type);
-                    board[line][column] = tile;
+                        Tile.ETileType type = (Tile.ETileType)Enum.Parse(typeof(Tile.ETileType), tileTypeStr);
+                        string image = GetImagePath(type);
+                        Tile tile = new Tile(line, column, image, type);
+
+                        board[line][column] = tile;
+                    }
                 }
             }
             catch (Exception ex)
@@ -165,7 +166,7 @@ namespace checkers_.Services
 
             return board;
         }
-       
+
         public class GameInfo
         {
             public int Id { get; set; }
@@ -175,6 +176,23 @@ namespace checkers_.Services
             public int RedPieces { get; set; }
             public int CapturedBlackPieces { get; set; }
             public int CapturedRedPieces { get; set; }
+        }
+
+        public static void SelectGame(string label)
+        {
+            ObservableCollection<GameInfo> games = LoadAllGames();
+            GameInfo selectedGame = games.FirstOrDefault(g => g.Label == label);
+
+            if (selectedGame != null)
+            {
+                GameID = selectedGame.Id;
+                SavedGameWindow savedGameWindow = new SavedGameWindow();
+                savedGameWindow.Show();
+            }
+            else
+            {
+                MessageBox.Show("Selected game not found!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         public static ObservableCollection<GameInfo> LoadAllGames()
@@ -236,89 +254,5 @@ namespace checkers_.Services
 
             return null;
         }
-
-        public static void SelectGame(string label)
-        {
-            ObservableCollection<GameInfo> games = LoadAllGames();
-            GameInfo selectedGame = games.FirstOrDefault(g => g.Label == label);
-
-            if (selectedGame != null)
-            {
-                GameID = selectedGame.Id;
-                Console.WriteLine("game id: " + GameID);
-
-                GameInfo gameInfo = GetGameWithID(GameID);
-                ObservableCollection<ObservableCollection<Tile>> board = RestoreGameBoard(GameID);
-
-                SavedGameViewModel savedGameViewModel = new SavedGameViewModel();
-
-                SavedGameWindow savedGameWindow = new SavedGameWindow();
-                savedGameWindow.Show();
-            }
-            else
-            {
-                MessageBox.Show("Selected game not found!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
-
-        public static ObservableCollection<ObservableCollection<Tile>> RestoreGameBoard(int gameID)
-        {
-            ObservableCollection<ObservableCollection<Tile>> board = new ObservableCollection<ObservableCollection<Tile>>();
-
-            for (int i = 0; i < 8; i++)
-            {
-                ObservableCollection<Tile> row = new ObservableCollection<Tile>();
-
-                for (int j = 0; j < 8; j++)
-                {
-                    string image = "";
-                    Tile.ETileType type = Tile.ETileType.None;
-
-                    if ((i + j) % 2 == 1)
-                    {
-                        image = "/checkers_;component/Resources/empty_cell.png";
-                        type = Tile.ETileType.Empty;
-                    }
-                    else
-                    {
-                        image = "/checkers_;component/Resources/always_empty_cell.png";
-                        type = Tile.ETileType.AlwaysEmpty;
-                    }
-
-                    Tile tile = new Tile(i, j, image, type);
-                    row.Add(tile);
-                }
-                board.Add(row);
-            }
-
-            try
-            {
-                XDocument doc = XDocument.Load("Resources/saved_boards.xml");
-                var gameNodes = doc.Root.Elements("Tiles").Where(node => (int)node.Element("GameID") == gameID);
-
-                foreach (var gameNode in gameNodes)
-                {
-                    foreach (var tileNode in gameNode.Elements("Tile"))
-                    {
-                        int line = int.Parse(tileNode.Element("Line").Value);
-                        int column = int.Parse(tileNode.Element("Column").Value);
-                        string tileTypeStr = tileNode.Element("TileType").Value;
-
-                        Tile.ETileType type = (Tile.ETileType)Enum.Parse(typeof(Tile.ETileType), tileTypeStr);
-                        string image = GetImagePath(type);
-                        Tile tile = new Tile(line, column, image, type);
-                        board[line][column] = tile;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error loading game board from XML: {ex.Message}");
-            }
-
-            return board;
-        }
-
-
     }
 }

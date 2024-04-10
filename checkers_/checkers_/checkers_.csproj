@@ -62,7 +62,6 @@
     <Compile Include="Services\CheckersBusinessLogic.cs" />
     <Compile Include="Services\SourceHelper.cs" />
     <Compile Include="Services\StatisticsHelper.cs" />
-    <Compile Include="ViewModels\GamesListViewModel.cs" />
     <Compile Include="ViewModels\GameViewModel.cs" />
     <Compile Include="ViewModels\MenuViewModel.cs" />
     <Compile Include="ViewModels\SavedGameViewModel.cs" />

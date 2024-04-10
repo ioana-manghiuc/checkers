@@ -44,10 +44,10 @@ namespace checkers_.Services
             if (gameInfo != null)
             {
                 RedTurn = gameInfo.Turn;
-                if(RedTurn)
+                if (RedTurn)
                 {
                     BlackTurn = "";
-                    RedsTurn = "RED TURN";                  
+                    RedsTurn = "RED TURN";
                 }
                 else
                 {

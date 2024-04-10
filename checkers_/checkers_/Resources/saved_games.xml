@@ -13,9 +13,9 @@
 		<Id>2</Id>
 		<Label>game 09-April-2024</Label>
 		<Turn>True</Turn>
-		<BlackPieces>1</BlackPieces>
-		<RedPieces>1</RedPieces>
-		<CapturedBlackPieces>11</CapturedBlackPieces>
-		<CapturedRedPieces>11</CapturedRedPieces>
+		<BlackPieces>2</BlackPieces>
+		<RedPieces>4</RedPieces>
+		<CapturedBlackPieces>10</CapturedBlackPieces>
+		<CapturedRedPieces>8</CapturedRedPieces>
 	</Game>
 </SavedGames>
