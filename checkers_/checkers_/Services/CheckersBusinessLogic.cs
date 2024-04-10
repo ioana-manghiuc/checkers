@@ -135,6 +135,48 @@ namespace checkers_.Services
             }
         }
 
+        private string TileSelected(Tile tile)
+        {
+            if (tile.TileType == Tile.ETileType.Red)
+            {
+                return "/checkers_;component/Resources/selected_man_red.png";
+            }
+            else if (tile.TileType == Tile.ETileType.Black)
+            {
+                return "/checkers_;component/Resources/selected_man_black.png";
+            }
+            else if (tile.TileType == Tile.ETileType.BlackKing)
+            {
+                return "/checkers_;component/Resources/selected_king_black.png";
+            }
+            else if (tile.TileType == Tile.ETileType.RedKing)
+            {
+                return "/checkers_;component/Resources/selected_king_red.png";
+            }
+            return "";
+        }
+
+        private string DeselectTile(Tile tile)
+        {
+            if (tile.TileType == Tile.ETileType.Red)
+            {
+                return "/checkers_;component/Resources/man_red.png";
+            }
+            else if (tile.TileType == Tile.ETileType.Black)
+            {
+                return "/checkers_;component/Resources/man_black.png";
+            }
+            else if (tile.TileType == Tile.ETileType.BlackKing)
+            {
+                return "/checkers_;component/Resources/king_black.png";
+            }
+            else if (tile.TileType == Tile.ETileType.RedKing)
+            {
+                return "/checkers_;component/Resources/king_red.png";
+            }
+            return "";
+        }
+
         private void SimpleMove(Tile first, Tile second)
         {
             string tempImage = first.Image;
@@ -249,8 +291,9 @@ namespace checkers_.Services
                     }
                     else
                     {
+                        tile.Image = TileSelected(tile);
                         firstTile = tile;
-                        isFirstClick = false;
+                        isFirstClick = false;                                    
                     }
                 }
             }
@@ -293,11 +336,12 @@ namespace checkers_.Services
                         {
                             MessageBox.Show("you can't move there!", "", MessageBoxButton.OK, MessageBoxImage.Error);
                         }
-                        isFirstClick = true;                        
+                        isFirstClick = true;
+                        tile.Image = DeselectTile(tile);
                     }
                 }
             }
-
+            
             if (tile.TileType == Tile.ETileType.Red && tile.Line == 0)
             {
                 tile.TileType = Tile.ETileType.RedKing;
