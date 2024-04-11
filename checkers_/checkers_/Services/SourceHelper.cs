@@ -194,7 +194,6 @@ namespace checkers_.Services
                 MessageBox.Show("Selected game not found!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-
         public static ObservableCollection<GameInfo> LoadAllGames()
         {
             List<GameInfo> listInfo = new List<GameInfo>();
@@ -321,7 +320,7 @@ namespace checkers_.Services
                 idNode.InnerText = gameID.ToString();
                 gameNode.AppendChild(idNode);
 
-                string label = "game" + " " + DateTime.Now.ToString("dd-MMM-yyyy HH-mm-ss");
+                string label = "game" + " " + DateTime.Now.ToString("dd-MMM-yyyy HH:mm:ss");
 
                 XmlNode labelNode = doc.CreateElement("Label");
                 labelNode.InnerText = label;

@@ -1,0 +1,62 @@
+﻿<Window x:Class="checkers_.Views.StatisticsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:checkers_.Views"
+        xmlns:vm="clr-namespace:checkers_.ViewModels"
+        mc:Ignorable="d"
+        Title="stats!" Height="520" Width="400">
+
+    <Window.Resources>
+        <SolidColorBrush x:Key="burgundy" Color="#47060b"></SolidColorBrush>
+        <SolidColorBrush x:Key="beige" Color="#dbd4d1"></SolidColorBrush>
+        <SolidColorBrush x:Key="blackpiece" Color="#1c070d"></SolidColorBrush>
+        <SolidColorBrush x:Key="redpiece" Color="#780d2d"></SolidColorBrush>
+        <ImageBrush x:Key="BackButtonIcon" ImageSource="/checkers_;component/Resources/back.png"/>
+
+        <Style x:Key="SmallerText" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource burgundy}"></Setter>
+            <Setter Property="FontSize" Value="27" />
+            <Setter Property="FontFamily" Value="Sitka Subheading Semibold" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+        </Style>
+
+        <Style x:Key="Messages" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="37" />
+            <Setter Property="FontFamily" Value="Sitka Subheading Semibold" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
+    </Window.Resources>
+
+    <Window.DataContext>
+        <vm:StatisticsViewModel/>
+    </Window.DataContext>
+
+    <Grid Name="StatisticsMenu" Background="{StaticResource beige}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="70"></RowDefinition>
+            <RowDefinition Height="120"></RowDefinition>
+            <RowDefinition Height="60"></RowDefinition>
+            <RowDefinition Height="100"></RowDefinition>
+            <RowDefinition Height="120"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Text="BLACK WINS" Grid.Column="0" Grid.Row="1" TextWrapping="Wrap" Style="{StaticResource Messages}" Foreground="{StaticResource blackpiece}"></TextBlock>
+        <TextBlock Text="RED WINS" Grid.Column="1" Grid.Row="1" TextWrapping="Wrap" Style="{StaticResource Messages}" Foreground="{StaticResource redpiece}" Padding="13"></TextBlock>
+        <TextBlock Text="{Binding BlackWins}" Grid.Column="0" Grid.Row="2" Style="{StaticResource Messages}" Foreground="{StaticResource blackpiece}"></TextBlock>
+        <TextBlock Text="{Binding RedWins}" Grid.Column="1" Grid.Row="2" Style="{StaticResource Messages}" Foreground="{StaticResource redpiece}"></TextBlock>
+
+        <TextBlock Text="max. pieces left on board" Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" TextWrapping="Wrap" Style="{StaticResource SmallerText}"></TextBlock>
+        <TextBlock Text="{Binding MaxBlackPieces}" Grid.Column="0" Grid.Row="4" Style="{StaticResource Messages}" Foreground="{StaticResource blackpiece}" VerticalAlignment="Top"></TextBlock>
+        <TextBlock Text="{Binding MaxRedPieces}" Grid.Column="1" Grid.Row="4" Style="{StaticResource Messages}" Foreground="{StaticResource redpiece}" VerticalAlignment="Top"></TextBlock>
+    </Grid>
+</Window>

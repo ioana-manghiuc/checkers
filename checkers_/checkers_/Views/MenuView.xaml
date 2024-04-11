@@ -11,8 +11,6 @@
     <UserControl.Resources>
         <SolidColorBrush x:Key="burgundy" Color="#47060b"></SolidColorBrush>
         <SolidColorBrush x:Key="beige" Color="#dbd4d1"></SolidColorBrush>
-        <SolidColorBrush x:Key="blackpiece" Color="#1c070d"></SolidColorBrush>
-        <SolidColorBrush x:Key="redpiece" Color="#780d2d"></SolidColorBrush>
         <ImageBrush x:Key="BackButtonIcon" ImageSource="/checkers_;component/Resources/back.png"/>
         <ImageBrush x:Key="MainView" ImageSource="/checkers_;component/Resources/main_view.png"/>
 
@@ -46,14 +44,6 @@
             <Setter Property="FontFamily" Value="Sitka Subheading Semibold" />
             <Setter Property="HorizontalAlignment" Value="Center" />
             <Setter Property="VerticalAlignment" Value="Center" />
-        </Style>
-
-        <Style x:Key="ListBoxStyle" TargetType="ListBox">
-            <Setter Property="Background" Value="{StaticResource beige}"/>
-            <Setter Property="Foreground" Value="{StaticResource burgundy}"/>
-            <Setter Property="FontSize" Value="24" />
-            <Setter Property="FontFamily" Value="Sitka Subheading Semibold" />
-            <Setter Property="Margin" Value="10" />
         </Style>
 
     </UserControl.Resources>
@@ -93,7 +83,7 @@
             <Grid.DataContext>
                 <vm:StatisticsViewModel/>
             </Grid.DataContext>
-            
+
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="60"></ColumnDefinition>
                 <ColumnDefinition></ColumnDefinition>
@@ -114,76 +104,13 @@
             <Button Name="NewGameBtn" Content="New Game" Grid.Column="1" Grid.Row="1" Style="{StaticResource RoundedButtonStyle}" Click="NewGameBtnClick"></Button>
 
             <Button Name="OpenBtn" Content="Open (saved game)" Grid.Column="1" Grid.Row="2" Style="{StaticResource RoundedButtonStyle}" Click="OpenBtnClick"></Button>
-            
+
             <Button Name="MJumpBtn" Content="Allow Multiple Jump" Grid.Column="1" Grid.Row="3" Style="{StaticResource RoundedButtonStyle}"></Button>
 
-            <Button Name="StatsBtn" Command="{Binding ReloadData}"  Content="Statistics" Grid.Column="1" Grid.Row="4" Style="{StaticResource RoundedButtonStyle}" Click="StatsBtnClick"></Button>
-       
-        </Grid>
-        
-        <!--new grid-->
-
-        <Grid Name="OpenGameMenu" Background="{StaticResource beige}" Visibility="Collapsed">
-
-            <Grid.DataContext>
-                <vm:SavedGameViewModel></vm:SavedGameViewModel>
-            </Grid.DataContext>
-            
-            <Grid.RowDefinitions>
-                <RowDefinition Height="70"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
-            </Grid.RowDefinitions>
-
-            <ItemsControl Name="GameList" ItemsSource="{Binding Games}"  BorderBrush="#6d5b60" Grid.Row="1" Margin="7" VerticalAlignment="Top" HorizontalAlignment="Center">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Button Content="{Binding Label}" Style="{StaticResource RoundedButtonStyle}" Margin="7" Width="300" Height="40" FontSize="19"
-                    Command="{Binding DataContext.SelectGame, RelativeSource={RelativeSource AncestorType={x:Type Grid}}}" 
-                    CommandParameter="{Binding Label}"/>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-
-            <Button Name="BackFromOpenBtn" Grid.Row="0" HorizontalContentAlignment="Left" HorizontalAlignment="Left"  Command="{Binding ReloadData}" Background="{StaticResource BackButtonIcon}" 
-                Click="BackToFileClick" Margin="5,5,0,0" BorderThickness="0" Width="50" Height="50"></Button>
+            <Button Name="StatsBtn" Content="Statistics" Grid.Column="1" Grid.Row="4" Style="{StaticResource RoundedButtonStyle}" Click="StatsBtnClick"></Button>
 
         </Grid>
 
-        <!--new grid-->
-
-        <Grid Name="StatisticsMenu" Background="{StaticResource beige}" Visibility="Collapsed">
-            
-            <Grid.DataContext>
-                <vm:StatisticsViewModel/>
-            </Grid.DataContext>
-            
-            <Grid.RowDefinitions>
-                <RowDefinition Height="70"></RowDefinition>
-                <RowDefinition Height="120"></RowDefinition>
-                <RowDefinition Height="60"></RowDefinition>
-                <RowDefinition Height="100"></RowDefinition>
-                <RowDefinition Height="120"></RowDefinition>
-            </Grid.RowDefinitions>
-            
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition></ColumnDefinition>
-                <ColumnDefinition></ColumnDefinition>
-            </Grid.ColumnDefinitions>
-
-            <Button Name="BackFromStatsBtn" Grid.Row="0" HorizontalContentAlignment="Left" HorizontalAlignment="Left" Background="{StaticResource BackButtonIcon}" 
-                Click="BackToFileClick" Command="{Binding ReloadData}"  Margin="5,5,0,0" BorderThickness="0" Width="50" Height="50" ></Button>
-        
-            <TextBlock Text="BLACK WINS" Grid.Column="0" Grid.Row="1" TextWrapping="Wrap" Style="{StaticResource Messages}" Foreground="{StaticResource blackpiece}"></TextBlock>
-            <TextBlock Text="RED WINS" Grid.Column="1" Grid.Row="1" TextWrapping="Wrap" Style="{StaticResource Messages}" Foreground="{StaticResource redpiece}" Padding="13"></TextBlock>
-            <TextBlock Text="{Binding BlackWins}" Grid.Column="0" Grid.Row="2" Style="{StaticResource Messages}" Foreground="{StaticResource blackpiece}"></TextBlock>
-            <TextBlock Text="{Binding RedWins}" Grid.Column="1" Grid.Row="2" Style="{StaticResource Messages}" Foreground="{StaticResource redpiece}"></TextBlock>
-
-            <TextBlock Text="max. pieces left on board" Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" TextWrapping="Wrap" Style="{StaticResource SmallerText}"></TextBlock>
-            <TextBlock Text="{Binding MaxBlackPieces}" Grid.Column="0" Grid.Row="4" Style="{StaticResource Messages}" Foreground="{StaticResource blackpiece}" VerticalAlignment="Top"></TextBlock>
-            <TextBlock Text="{Binding MaxRedPieces}" Grid.Column="1" Grid.Row="4" Style="{StaticResource Messages}" Foreground="{StaticResource redpiece}" VerticalAlignment="Top"></TextBlock>
-
-        </Grid>
-        
         <!--new grid-->
 
         <Grid Name="HelpMenu" Background="{StaticResource beige}" Visibility="Collapsed">

@@ -16,6 +16,7 @@ namespace checkers_.ViewModels
         private CheckersBusinessLogic cbl;
         public ObservableCollection<SourceHelper.GameInfo> Games { get; set; }
         private ICommand selectGame;
+        private ICommand loadGames;
         public int ThisGameID { get; set; }
 
         public SavedGameViewModel()
@@ -35,6 +36,19 @@ namespace checkers_.ViewModels
             BlackTurn = cbl.BlackTurn;
         }
 
+        public ICommand LoadGames
+        {
+            get
+            {
+                if (loadGames == null)
+                {
+                    loadGames = new RelayCommand<object>(ReloadGames);
+                }
+                return loadGames;
+            }
+        }
+
+
         public ICommand SelectGame
         {
             get
@@ -45,6 +59,11 @@ namespace checkers_.ViewModels
                 }
                 return selectGame;
             }
+        }
+
+        private void ReloadGames(object obj)
+        {
+            Games = SourceHelper.LoadAllGames();
         }
 
         private ObservableCollection<ObservableCollection<TileViewModel>> CellBoardToCellVMBoard(ObservableCollection<ObservableCollection<Tile>> board)
