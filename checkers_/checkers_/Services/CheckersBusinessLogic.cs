@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Documents;
+using System.Windows.Media.Animation;
 using checkers_.Models;
 using checkers_.ViewModels;
 using static checkers_.Services.SourceHelper;
@@ -18,22 +19,6 @@ namespace checkers_.Services
         private GameViewModel gvm;
         private SavedGameViewModel sgvm;
         private StatisticsHelper sh = new StatisticsHelper();
-        private Tile firstTile, secondTile;
-        private bool isFirstClick = true;
-        private int redCapturedBlack = 0;
-        private int blackCapturedRed = 0;
-        private int redPieces = 12;
-        private int blackPieces = 12;
-        private bool redTurn = true;
-        public int RedCapturedBlack { get { return redCapturedBlack; } set { redCapturedBlack = value; } }           
-        public int BlackCapturedRed { get { return blackCapturedRed; } set { blackCapturedRed = value; } }
-        public int RedPieces { get { return redPieces; } set { redPieces = value; } }
-        public int BlackPieces { get { return blackPieces; } set { blackPieces = value; } }
-        public string RedWin { get; set; }
-        public string BlackWin { get; set; }
-        public bool RedTurn { get { return redTurn; } set { redTurn = value; } }
-        public string RedsTurn { get; set; }
-        public string BlackTurn { get; set; }
 
         public CheckersBusinessLogic(ObservableCollection<ObservableCollection<Tile>> board, SavedGameViewModel sgvm)
         {
@@ -354,9 +339,42 @@ namespace checkers_.Services
                 tile.Image = "/checkers_;component/Resources/king_black.png";
             }
         }
+
         public void ClickAction(Tile tile)
         {
             SwapTiles(tile);
         }
+
+        public void SaveGame(object id)
+        {
+            int id2 = SourceHelper.GetNextGameID();
+            if (gvm != null)
+            {
+                SourceHelper.SaveGameInfo(id2, RedTurn, gvm.BlackPieces, gvm.RedPieces, gvm.RedCapturedBlack, gvm.BlackCapturedRed);
+                SourceHelper.SaveBoard(id2, board);
+            }
+            else
+            {
+                SourceHelper.SaveGameInfo(id2, RedTurn, sgvm.BlackPieces, sgvm.RedPieces, sgvm.RedCapturedBlack, sgvm.BlackCapturedRed);
+                SourceHelper.SaveBoard(id2, board);
+            }          
+        }
+
+        private Tile firstTile, secondTile;
+        private bool isFirstClick = true;
+        private int redCapturedBlack = 0;
+        private int blackCapturedRed = 0;
+        private int redPieces = 12;
+        private int blackPieces = 12;
+        private bool redTurn = true;
+        public int RedCapturedBlack { get { return redCapturedBlack; } set { redCapturedBlack = value; } }
+        public int BlackCapturedRed { get { return blackCapturedRed; } set { blackCapturedRed = value; } }
+        public int RedPieces { get { return redPieces; } set { redPieces = value; } }
+        public int BlackPieces { get { return blackPieces; } set { blackPieces = value; } }
+        public string RedWin { get; set; }
+        public string BlackWin { get; set; }
+        public bool RedTurn { get { return redTurn; } set { redTurn = value; } }
+        public string RedsTurn { get; set; }
+        public string BlackTurn { get; set; }
     }
 }

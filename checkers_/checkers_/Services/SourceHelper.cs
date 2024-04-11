@@ -224,6 +224,11 @@ namespace checkers_.Services
             return games;
         }
 
+        public static int GetNextGameID()
+        {
+            return LoadAllGames().Max(g => g.Id) + 1;
+        }
+
         public static GameInfo GetGameWithID(int id)
         {
             try
@@ -253,6 +258,103 @@ namespace checkers_.Services
             }
 
             return null;
+        }
+
+        public static void SaveBoard(int gameID, ObservableCollection<ObservableCollection<Tile>> board)
+        {
+            try
+            {
+                XmlDocument doc = new XmlDocument();
+                doc.Load("Resources/saved_boards.xml");
+
+                XmlNode gameNode = doc.CreateElement("Tiles");
+
+                XmlNode idNode = doc.CreateElement("GameID");
+                idNode.InnerText = gameID.ToString();
+                gameNode.AppendChild(idNode);
+
+                foreach (var row in board)
+                {
+                    foreach (var tile in row)
+                    {
+                        if (tile.TileType != Tile.ETileType.AlwaysEmpty && tile.TileType != Tile.ETileType.Empty)
+                        {
+                            XmlNode tileNode = doc.CreateElement("Tile");
+
+                            XmlNode lineNode = doc.CreateElement("Line");
+                            lineNode.InnerText = tile.Line.ToString();
+                            tileNode.AppendChild(lineNode);
+
+                            XmlNode columnNode = doc.CreateElement("Column");
+                            columnNode.InnerText = tile.Column.ToString();
+                            tileNode.AppendChild(columnNode);
+
+                            XmlNode tileTypeNode = doc.CreateElement("TileType");
+                            tileTypeNode.InnerText = tile.TileType.ToString();
+                            tileNode.AppendChild(tileTypeNode);
+
+                            gameNode.AppendChild(tileNode);
+                        }
+                    }
+                }
+
+                doc.DocumentElement.AppendChild(gameNode);
+
+                doc.Save("Resources/saved_boards.xml");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error saving game board to XML: {ex.Message}");
+            }
+        }
+
+        public static void SaveGameInfo(int gameID, bool turn, int redPieces, int blackPieces, int capturedBlackPieces, int capturedRedPieces)
+        {
+            try
+            {
+                XmlDocument doc = new XmlDocument();
+                doc.Load("Resources/saved_games.xml");
+
+                XmlNode gameNode = doc.CreateElement("Game");
+
+                XmlNode idNode = doc.CreateElement("Id");
+                idNode.InnerText = gameID.ToString();
+                gameNode.AppendChild(idNode);
+
+                string label = "game" + " " + DateTime.Now.ToString("dd-MMM-yyyy HH-mm-ss");
+
+                XmlNode labelNode = doc.CreateElement("Label");
+                labelNode.InnerText = label;
+                gameNode.AppendChild(labelNode);
+
+                XmlNode turnNode = doc.CreateElement("Turn");
+                turnNode.InnerText = turn.ToString();
+                gameNode.AppendChild(turnNode);
+
+                XmlNode blackPiecesNode = doc.CreateElement("BlackPieces");
+                blackPiecesNode.InnerText = blackPieces.ToString();
+                gameNode.AppendChild(blackPiecesNode);
+
+                XmlNode redPiecesNode = doc.CreateElement("RedPieces");
+                redPiecesNode.InnerText = redPieces.ToString();
+                gameNode.AppendChild(redPiecesNode);
+
+                XmlNode capturedBlackPiecesNode = doc.CreateElement("CapturedBlackPieces");
+                capturedBlackPiecesNode.InnerText = capturedBlackPieces.ToString();
+                gameNode.AppendChild(capturedBlackPiecesNode);
+
+                XmlNode capturedRedPiecesNode = doc.CreateElement("CapturedRedPieces");
+                capturedRedPiecesNode.InnerText = capturedRedPieces.ToString();
+                gameNode.AppendChild(capturedRedPiecesNode);               
+
+                doc.DocumentElement.AppendChild(gameNode);
+
+                doc.Save("Resources/saved_games.xml");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error saving game info to XML: {ex.Message}");
+            }
         }
     }
 }

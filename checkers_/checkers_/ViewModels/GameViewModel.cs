@@ -14,11 +14,14 @@ namespace checkers_.ViewModels
     class GameViewModel : BaseNotification
     {
         private CheckersBusinessLogic cbl;
+        private ICommand saveGameConfig;
+        public int ThisGameID { get; set;}
 
         public GameViewModel()
         {
             ObservableCollection<ObservableCollection<Tile>> board = SourceHelper.InitializeGameBoard();
             cbl = new CheckersBusinessLogic(board, this);
+            ThisGameID = SourceHelper.GetNextGameID();
             GameBoard = CellBoardToCellVMBoard(board);
             RedCapturedBlack = cbl.RedCapturedBlack;
             BlackCapturedRed = cbl.BlackCapturedRed;
@@ -29,6 +32,37 @@ namespace checkers_.ViewModels
             RedTurn = cbl.RedsTurn;
             BlackTurn = cbl.BlackTurn;
         }
+
+        public ICommand SaveGameConfig
+        {
+            get
+            {
+                if (saveGameConfig == null)
+                {
+                    saveGameConfig = new RelayCommand<object>(cbl.SaveGame);
+                }
+                return saveGameConfig;
+            }
+        }
+
+        private ObservableCollection<ObservableCollection<TileViewModel>> CellBoardToCellVMBoard(ObservableCollection<ObservableCollection<Tile>> board)
+        {
+            ObservableCollection<ObservableCollection<TileViewModel>> result = new ObservableCollection<ObservableCollection<TileViewModel>>();
+            for (int i = 0; i < board.Count; i++)
+            {
+                ObservableCollection<TileViewModel> line = new ObservableCollection<TileViewModel>();
+                for (int j = 0; j < board[i].Count; j++)
+                {
+                    Tile c = board[i][j];
+                    TileViewModel tileVM = new TileViewModel(c.Line, c.Column, c.Image, c.TileType, cbl);
+                    line.Add(tileVM);
+                }
+                result.Add(line);
+            }
+            return result;
+        }
+
+        public ObservableCollection<ObservableCollection<TileViewModel>> GameBoard { get; set; }
 
         private int redCapturedBlack = 0;
         public int RedCapturedBlack
@@ -139,26 +173,6 @@ namespace checkers_.ViewModels
                     NotifyPropertyChanged("BlackTurn");
                 }
             }
-        }
-
-      
-        private ObservableCollection<ObservableCollection<TileViewModel>> CellBoardToCellVMBoard(ObservableCollection<ObservableCollection<Tile>> board)
-        {
-            ObservableCollection<ObservableCollection<TileViewModel>> result = new ObservableCollection<ObservableCollection<TileViewModel>>();
-            for (int i = 0; i < board.Count; i++)
-            {
-                ObservableCollection<TileViewModel> line = new ObservableCollection<TileViewModel>();
-                for (int j = 0; j < board[i].Count; j++)
-                {
-                    Tile c = board[i][j];
-                    TileViewModel tileVM = new TileViewModel(c.Line, c.Column, c.Image, c.TileType, cbl);
-                    line.Add(tileVM);
-                }
-                result.Add(line);
-            }
-            return result;
-        }
-
-        public ObservableCollection<ObservableCollection<TileViewModel>> GameBoard { get; set; }
+        }            
     }
 }

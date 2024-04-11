@@ -107,7 +107,8 @@
                 <RowDefinition></RowDefinition>
             </Grid.RowDefinitions>
 
-            <Button Content="Save" Grid.Column="0" HorizontalAlignment="Left" Grid.ColumnSpan="2" VerticalAlignment="Bottom" Style="{StaticResource RoundedButtonStyle}"></Button>
+            <Button Content="Save" Grid.Column="0" Command="{Binding SaveGameConfig}" CommandParameter="{Binding ThisGameID}" HorizontalAlignment="Left" Grid.ColumnSpan="2" VerticalAlignment="Bottom" Style="{StaticResource RoundedButtonStyle}"></Button>
+                    <!--Command="{Binding SaveGameConfig}"--> 
             
             <Label Content="score" Grid.Column="1" Grid.Row="0" Style="{StaticResource LabelStyle}"></Label>
             <TextBlock Text="{Binding BlackCapturedRed}" Grid.Column="1" Grid.Row="1" Style="{StaticResource Score}" Foreground="{StaticResource redpiece}"></TextBlock>

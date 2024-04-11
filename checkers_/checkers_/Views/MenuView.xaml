@@ -89,6 +89,11 @@
         <!--new grid-->
 
         <Grid Name="FileMenu" Background="{StaticResource beige}" Visibility="Collapsed">
+
+            <Grid.DataContext>
+                <vm:StatisticsViewModel/>
+            </Grid.DataContext>
+            
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="60"></ColumnDefinition>
                 <ColumnDefinition></ColumnDefinition>
@@ -111,8 +116,9 @@
             <Button Name="OpenBtn" Content="Open (saved game)" Grid.Column="1" Grid.Row="2" Style="{StaticResource RoundedButtonStyle}" Click="OpenBtnClick"></Button>
             
             <Button Name="MJumpBtn" Content="Allow Multiple Jump" Grid.Column="1" Grid.Row="3" Style="{StaticResource RoundedButtonStyle}"></Button>
-            
-            <Button Name="StatsBtn" Content="Statistics" Grid.Column="1" Grid.Row="4" Style="{StaticResource RoundedButtonStyle}" Click="StatsBtnClick"></Button>
+
+            <Button Name="StatsBtn" Command="{Binding ReloadData}"  Content="Statistics" Grid.Column="1" Grid.Row="4" Style="{StaticResource RoundedButtonStyle}" Click="StatsBtnClick"></Button>
+       
         </Grid>
         
         <!--new grid-->
@@ -131,15 +137,14 @@
             <ItemsControl Name="GameList" ItemsSource="{Binding Games}"  BorderBrush="#6d5b60" Grid.Row="1" Margin="7" VerticalAlignment="Top" HorizontalAlignment="Center">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <!-- Update the DataContext to the SavedGameViewModel -->
-                        <Button Content="{Binding Label}" Style="{StaticResource RoundedButtonStyle}" Margin="7" Width="300" Height="40"
+                        <Button Content="{Binding Label}" Style="{StaticResource RoundedButtonStyle}" Margin="7" Width="300" Height="40" FontSize="19"
                     Command="{Binding DataContext.SelectGame, RelativeSource={RelativeSource AncestorType={x:Type Grid}}}" 
                     CommandParameter="{Binding Label}"/>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
 
-            <Button Name="BackFromOpenBtn" Grid.Row="0" HorizontalContentAlignment="Left" HorizontalAlignment="Left" Background="{StaticResource BackButtonIcon}" 
+            <Button Name="BackFromOpenBtn" Grid.Row="0" HorizontalContentAlignment="Left" HorizontalAlignment="Left"  Command="{Binding ReloadData}" Background="{StaticResource BackButtonIcon}" 
                 Click="BackToFileClick" Margin="5,5,0,0" BorderThickness="0" Width="50" Height="50"></Button>
 
         </Grid>
@@ -164,9 +169,9 @@
                 <ColumnDefinition></ColumnDefinition>
                 <ColumnDefinition></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            
+
             <Button Name="BackFromStatsBtn" Grid.Row="0" HorizontalContentAlignment="Left" HorizontalAlignment="Left" Background="{StaticResource BackButtonIcon}" 
-                Click="BackToFileClick" Margin="5,5,0,0" BorderThickness="0" Width="50" Height="50" Command="{Binding ReloadData}"></Button>
+                Click="BackToFileClick" Command="{Binding ReloadData}"  Margin="5,5,0,0" BorderThickness="0" Width="50" Height="50" ></Button>
         
             <TextBlock Text="BLACK WINS" Grid.Column="0" Grid.Row="1" TextWrapping="Wrap" Style="{StaticResource Messages}" Foreground="{StaticResource blackpiece}"></TextBlock>
             <TextBlock Text="RED WINS" Grid.Column="1" Grid.Row="1" TextWrapping="Wrap" Style="{StaticResource Messages}" Foreground="{StaticResource redpiece}" Padding="13"></TextBlock>

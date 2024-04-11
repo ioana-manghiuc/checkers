@@ -16,14 +16,15 @@ namespace checkers_.ViewModels
         private CheckersBusinessLogic cbl;
         public ObservableCollection<SourceHelper.GameInfo> Games { get; set; }
         private ICommand selectGame;
-        private string gameLabel;
+        public int ThisGameID { get; set; }
 
         public SavedGameViewModel()
         {
             Games = SourceHelper.LoadAllGames();
-            ObservableCollection<ObservableCollection<Tile>> board = SourceHelper.RestoreGameBoard(SourceHelper.GameID); // Use the correct method
+            ObservableCollection<ObservableCollection<Tile>> board = SourceHelper.RestoreGameBoard(SourceHelper.GameID);
             cbl = new CheckersBusinessLogic(board, this);
             SavedGameBoard = CellBoardToCellVMBoard(board);
+            ThisGameID = SourceHelper.GetNextGameID();
             RedCapturedBlack = cbl.RedCapturedBlack;
             BlackCapturedRed = cbl.BlackCapturedRed;
             RedPieces = cbl.RedPieces;
@@ -45,6 +46,25 @@ namespace checkers_.ViewModels
                 return selectGame;
             }
         }
+
+        private ObservableCollection<ObservableCollection<TileViewModel>> CellBoardToCellVMBoard(ObservableCollection<ObservableCollection<Tile>> board)
+        {
+            ObservableCollection<ObservableCollection<TileViewModel>> result = new ObservableCollection<ObservableCollection<TileViewModel>>();
+            for (int i = 0; i < board.Count; i++)
+            {
+                ObservableCollection<TileViewModel> line = new ObservableCollection<TileViewModel>();
+                for (int j = 0; j < board[i].Count; j++)
+                {
+                    Tile c = board[i][j];
+                    TileViewModel tileVM = new TileViewModel(c.Line, c.Column, c.Image, c.TileType, cbl);
+                    line.Add(tileVM);
+                }
+                result.Add(line);
+            }
+            return result;
+        }
+        public ObservableCollection<ObservableCollection<TileViewModel>> SavedGameBoard { get; set; }
+
 
         private int redCapturedBlack = 0;
         public int RedCapturedBlack
@@ -156,24 +176,5 @@ namespace checkers_.ViewModels
                 }
             }
         }
-        private ObservableCollection<ObservableCollection<TileViewModel>> CellBoardToCellVMBoard(ObservableCollection<ObservableCollection<Tile>> board)
-        {
-            ObservableCollection<ObservableCollection<TileViewModel>> result = new ObservableCollection<ObservableCollection<TileViewModel>>();
-            for (int i = 0; i < board.Count; i++)
-            {
-                ObservableCollection<TileViewModel> line = new ObservableCollection<TileViewModel>();
-                for (int j = 0; j < board[i].Count; j++)
-                {
-                    Tile c = board[i][j];
-                    TileViewModel tileVM = new TileViewModel(c.Line, c.Column, c.Image, c.TileType, cbl);
-                    line.Add(tileVM);
-                }
-                result.Add(line);
-            }
-            return result;
-        }
-
-        public ObservableCollection<ObservableCollection<TileViewModel>> SavedGameBoard { get; set; }
-
     }
 }
