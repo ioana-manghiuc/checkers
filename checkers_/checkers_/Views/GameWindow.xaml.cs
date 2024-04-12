@@ -1,4 +1,6 @@
-﻿using System;
+﻿using checkers_.Services;
+using checkers_.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,6 +24,23 @@ namespace checkers_.Views
         public GameWindow()
         {
             InitializeComponent();
+        }
+
+        private void HideButton(object sender, RoutedEventArgs e)
+        {
+            if(CheckersBusinessLogic.Modifier != 0 || CheckersBusinessLogic.GameStarted)
+            {
+                MJ.Visibility = Visibility.Hidden;
+                if(CheckersBusinessLogic.Modifier == 1)
+                {
+                    MJText.Text = "(multiple jumps allowed)";
+                }
+                else if(CheckersBusinessLogic.Modifier == 2 || CheckersBusinessLogic.Modifier == 0)
+                {
+                    MJText.Text = "(multiple jumps not allowed)";
+                }
+                MJText.Visibility = Visibility.Visible;
+            }
         }
     }
 }

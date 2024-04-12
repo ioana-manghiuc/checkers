@@ -17,6 +17,8 @@ namespace checkers_.ViewModels
         public ObservableCollection<SourceHelper.GameInfo> Games { get; set; }
         private ICommand selectGame;
         private ICommand loadGames;
+        private ICommand saveGameConfig;
+        private ICommand multipleJumpModifier;
         public int ThisGameID { get; set; }
 
         public SavedGameViewModel()
@@ -34,6 +36,7 @@ namespace checkers_.ViewModels
             BlackWin = cbl.BlackWin;
             RedTurn = cbl.RedsTurn;
             BlackTurn = cbl.BlackTurn;
+            MultipleJumpsAllowed = cbl.MultipleJumpsAllowed;
         }
 
         public ICommand LoadGames
@@ -48,7 +51,6 @@ namespace checkers_.ViewModels
             }
         }
 
-
         public ICommand SelectGame
         {
             get
@@ -60,6 +62,31 @@ namespace checkers_.ViewModels
                 return selectGame;
             }
         }
+
+        public ICommand SaveGameConfig
+        {
+            get
+            {
+                if (saveGameConfig == null)
+                {
+                    saveGameConfig = new RelayCommand<object>(cbl.SaveGame);
+                }
+                return saveGameConfig;
+            }
+        }
+
+        public ICommand MultipleJumpModifier
+        {
+            get
+            {
+                if (multipleJumpModifier == null)
+                {
+                    multipleJumpModifier = new RelayCommand<object>(cbl.MultipleJumpModifier);
+                }
+                return multipleJumpModifier;
+            }
+        }
+
 
         private void ReloadGames(object obj)
         {
@@ -192,6 +219,20 @@ namespace checkers_.ViewModels
                 {
                     blackTurn = value;
                     NotifyPropertyChanged("BlackTurn");
+                }
+            }
+        }
+
+        private bool multipleJumpsAllowed = false;
+        public bool MultipleJumpsAllowed
+        {
+            get { return multipleJumpsAllowed; }
+            set
+            {
+                if (value != multipleJumpsAllowed)
+                {
+                    multipleJumpsAllowed = value;
+                    NotifyPropertyChanged("MultipleJumpsAllowed");
                 }
             }
         }

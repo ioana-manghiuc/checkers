@@ -81,7 +81,7 @@
         <Grid Name="FileMenu" Background="{StaticResource beige}" Visibility="Collapsed">
 
             <Grid.DataContext>
-                <vm:StatisticsViewModel/>
+                <vm:GameViewModel/>
             </Grid.DataContext>
 
             <Grid.ColumnDefinitions>
@@ -90,7 +90,7 @@
                 <ColumnDefinition Width="60"></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="100"></RowDefinition>
+                <RowDefinition Height="130"></RowDefinition>
                 <RowDefinition Height="70"></RowDefinition>
                 <RowDefinition Height="70"></RowDefinition>
                 <RowDefinition Height="70"></RowDefinition>
@@ -105,9 +105,7 @@
 
             <Button Name="OpenBtn" Content="Open (saved game)" Grid.Column="1" Grid.Row="2" Style="{StaticResource RoundedButtonStyle}" Click="OpenBtnClick"></Button>
 
-            <Button Name="MJumpBtn" Content="Allow Multiple Jump" Grid.Column="1" Grid.Row="3" Style="{StaticResource RoundedButtonStyle}"></Button>
-
-            <Button Name="StatsBtn" Content="Statistics" Grid.Column="1" Grid.Row="4" Style="{StaticResource RoundedButtonStyle}" Click="StatsBtnClick"></Button>
+            <Button Name="StatsBtn" Content="Statistics" Grid.Column="1" Grid.Row="3" Style="{StaticResource RoundedButtonStyle}" Click="StatsBtnClick"></Button>
 
         </Grid>
 

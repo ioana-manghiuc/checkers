@@ -41,7 +41,7 @@
             <Setter Property="Foreground" Value="{StaticResource beige}" />
             <Setter Property="FontSize" Value="24" />
             <Setter Property="FontFamily" Value="Sitka Subheading Semibold" />
-            <Setter Property="Margin" Value="7" />
+            <Setter Property="Margin" Value="0, 30, 17, 7" />
             <Setter Property="Height" Value="60"></Setter>
             <Setter Property="Width" Value="100"></Setter>
             <Setter Property="Template">
@@ -64,7 +64,7 @@
     <Grid Background="#dbd4d1">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"></ColumnDefinition>
-            <ColumnDefinition Width="330"></ColumnDefinition>
+            <ColumnDefinition Width="370"></ColumnDefinition>
         </Grid.ColumnDefinitions>
 
         <ItemsControl Name="Board" ItemsSource="{Binding SavedGameBoard}" BorderThickness="3" BorderBrush="#6d5b60" Grid.Column="0" Margin="7" VerticalAlignment="Center" HorizontalAlignment="Center">
@@ -100,15 +100,18 @@
                 <ColumnDefinition Width="200"></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="100"></RowDefinition>
+                <RowDefinition Height="150"></RowDefinition>
                 <RowDefinition></RowDefinition>
                 <RowDefinition Height="50"></RowDefinition>
                 <RowDefinition Height="90"></RowDefinition>
                 <RowDefinition></RowDefinition>
             </Grid.RowDefinitions>
 
-            <Button Content="Save" Grid.Column="0" HorizontalAlignment="Left" Grid.ColumnSpan="2" Command="{Binding SaveGameConfig}" CommandParameter="{Binding ThisGameID}"
-                    VerticalAlignment="Bottom" Style="{StaticResource RoundedButtonStyle}"></Button>
+            <Button Content="Save" Grid.Column="0" Command="{Binding SaveGameConfig}" CommandParameter="{Binding ThisGameID}" HorizontalAlignment="Left" Grid.ColumnSpan="2" VerticalAlignment="Top"
+             Style="{StaticResource RoundedButtonStyle}"></Button>
+
+            <Button Content="multiple jumps allowed" Grid.Column="0" Command="{Binding MultipleJumpModifier}" CommandParameter="{Binding MultipleJumpsAllowed}" HorizontalAlignment="Right" Grid.ColumnSpan="2" VerticalAlignment="Top"
+             Style="{StaticResource RoundedButtonStyle}" FontSize="19" Width="230"></Button>
 
             <Label Content="score" Grid.Column="1" Grid.Row="0" Style="{StaticResource LabelStyle}"></Label>
             <TextBlock Text="{Binding BlackCapturedRed}" Grid.Column="1" Grid.Row="1" Style="{StaticResource Score}" Foreground="{StaticResource redpiece}"></TextBlock>

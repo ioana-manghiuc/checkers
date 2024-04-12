@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -43,6 +44,7 @@ namespace checkers_.Services
                 BlackCapturedRed = gameInfo.CapturedRedPieces;
                 RedPieces = gameInfo.RedPieces;
                 BlackPieces = gameInfo.BlackPieces;
+                MultipleJumpsAllowed = gameInfo.MultipleJumpsAllowed;
             }
             else
             {
@@ -54,7 +56,8 @@ namespace checkers_.Services
         {
             this.board = board;
             this.gvm = gameViewModel;
-            RedsTurn = "RED TURN";            
+            RedsTurn = "RED TURN";           
+            Console.WriteLine("Multiple jumps allowed: " + MultipleJumpsAllowed);   
         }      
 
         private bool MovementAllowed(Tile first, Tile second)
@@ -276,6 +279,7 @@ namespace checkers_.Services
                     }
                     else
                     {
+                        GameStarted = true;
                         tile.Image = TileSelected(tile);
                         firstTile = tile;
                         isFirstClick = false;                                    
@@ -285,6 +289,7 @@ namespace checkers_.Services
             else
             {
                 secondTile = tile;
+                
                 if (secondTile.TileType != Tile.ETileType.AlwaysEmpty)
                 {
                     if (MovementAllowed(firstTile, secondTile) && 
@@ -293,6 +298,7 @@ namespace checkers_.Services
                         if (secondTile.TileType == Tile.ETileType.Empty)
                         {
                             SwitchTurn(firstTile);
+                           
                             // move conditions for men
                             if ((firstTile.TileType == Tile.ETileType.Red && firstTile.Line - secondTile.Line == 1) ||
                                 (firstTile.TileType == Tile.ETileType.Black && secondTile.Line - firstTile.Line == 1))
@@ -350,14 +356,47 @@ namespace checkers_.Services
             int id2 = SourceHelper.GetNextGameID();
             if (gvm != null)
             {
-                SourceHelper.SaveGameInfo(id2, RedTurn, gvm.BlackPieces, gvm.RedPieces, gvm.RedCapturedBlack, gvm.BlackCapturedRed);
+                SourceHelper.SaveGameInfo(id2, RedTurn, gvm.BlackPieces, gvm.RedPieces, gvm.RedCapturedBlack, gvm.BlackCapturedRed, gvm.MultipleJumpsAllowed);
                 SourceHelper.SaveBoard(id2, board);
             }
             else
             {
-                SourceHelper.SaveGameInfo(id2, RedTurn, sgvm.BlackPieces, sgvm.RedPieces, sgvm.RedCapturedBlack, sgvm.BlackCapturedRed);
+                SourceHelper.SaveGameInfo(id2, RedTurn, sgvm.BlackPieces, sgvm.RedPieces, sgvm.RedCapturedBlack, sgvm.BlackCapturedRed, sgvm.MultipleJumpsAllowed);
                 SourceHelper.SaveBoard(id2, board);
             }          
+        }
+
+        public void MultipleJumpModifier(object obj)
+        {
+            if (Modifier == 0 || !GameStarted)
+            {
+                if (gvm != null)
+                {
+                    gvm.MultipleJumpsAllowed = !gvm.MultipleJumpsAllowed;
+                    MultipleJumpsAllowed = gvm.MultipleJumpsAllowed;
+                    Console.WriteLine("Multiple jumps allowed status: " + MultipleJumpsAllowed);
+                    Console.WriteLine("Multiple jumps allowed GVM status: " + gvm.MultipleJumpsAllowed);
+                    if (gvm.MultipleJumpsAllowed)
+                        Modifier = 1;
+                    else if (!gvm.MultipleJumpsAllowed)
+                        Modifier = 2;
+                }
+                else
+                {
+                    sgvm.MultipleJumpsAllowed = !sgvm.MultipleJumpsAllowed;
+                    MultipleJumpsAllowed = sgvm.MultipleJumpsAllowed;
+                    Console.WriteLine("Multiple jumps allowed status: " + MultipleJumpsAllowed);
+                    Console.WriteLine("Multiple jumps allowed SGVM status: " + sgvm.MultipleJumpsAllowed);
+                    if (sgvm.MultipleJumpsAllowed)
+                        Modifier = 1;
+                    else if (!sgvm.MultipleJumpsAllowed)
+                        Modifier = 2;
+                }
+            }
+            else
+            {
+                MessageBox.Show("You can't change this setting during the game!", "", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private Tile firstTile, secondTile;
@@ -367,6 +406,9 @@ namespace checkers_.Services
         private int redPieces = 12;
         private int blackPieces = 12;
         private bool redTurn = true;
+        private bool multipleJumpsAllowed = false;
+        private static int modifier = 0;
+        private static bool gameStarted = false;
         public int RedCapturedBlack { get { return redCapturedBlack; } set { redCapturedBlack = value; } }
         public int BlackCapturedRed { get { return blackCapturedRed; } set { blackCapturedRed = value; } }
         public int RedPieces { get { return redPieces; } set { redPieces = value; } }
@@ -376,5 +418,8 @@ namespace checkers_.Services
         public bool RedTurn { get { return redTurn; } set { redTurn = value; } }
         public string RedsTurn { get; set; }
         public string BlackTurn { get; set; }
+        public bool MultipleJumpsAllowed { get { return multipleJumpsAllowed; } set { multipleJumpsAllowed = value; } }
+        public static int Modifier { get { return modifier; } set { modifier = value; } }
+        public static bool GameStarted { get { return gameStarted; } set { gameStarted = value; } }
     }
 }

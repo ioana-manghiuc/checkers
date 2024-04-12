@@ -35,13 +35,13 @@
             <Setter Property="HorizontalAlignment" Value="Center" />
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
-        
+
         <Style x:Key="RoundedButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="#801c070d" />
             <Setter Property="Foreground" Value="{StaticResource beige}" />
             <Setter Property="FontSize" Value="24" />
             <Setter Property="FontFamily" Value="Sitka Subheading Semibold" />
-            <Setter Property="Margin" Value="7" />
+            <Setter Property="Margin" Value="0, 30, 17, 7" />
             <Setter Property="Height" Value="60"></Setter>
             <Setter Property="Width" Value="100"></Setter>
             <Setter Property="Template">
@@ -54,17 +54,17 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        
+
     </Window.Resources>
 
     <Window.DataContext>
         <vm:GameViewModel/>
     </Window.DataContext>
-    
+
     <Grid Background="#dbd4d1">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"></ColumnDefinition>
-            <ColumnDefinition Width="330"></ColumnDefinition>
+            <ColumnDefinition Width="370"></ColumnDefinition>
         </Grid.ColumnDefinitions>
 
         <ItemsControl Name="Board" ItemsSource="{Binding GameBoard}" BorderThickness="3" BorderBrush="#6d5b60" Grid.Column="0" Margin="7" VerticalAlignment="Center" HorizontalAlignment="Center">
@@ -79,7 +79,7 @@
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <Border Width="70" Height="70" BorderThickness="0">
-                                    <Button Command="{Binding ClickCommand}" CommandParameter="{Binding STile}">
+                                    <Button Command="{Binding ClickCommand}" CommandParameter="{Binding STile}" Click="HideButton">
                                         <Button.Template>
                                             <ControlTemplate>
                                                 <Image Source="{Binding STile.Image}" Stretch="UniformToFill"/>
@@ -100,28 +100,34 @@
                 <ColumnDefinition Width="200"></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="100"></RowDefinition>
+                <RowDefinition Height="150"></RowDefinition>
                 <RowDefinition></RowDefinition>
                 <RowDefinition Height="50"></RowDefinition>
                 <RowDefinition Height="90"></RowDefinition>
                 <RowDefinition></RowDefinition>
             </Grid.RowDefinitions>
 
-            <Button Content="Save" Grid.Column="0" Command="{Binding SaveGameConfig}" CommandParameter="{Binding ThisGameID}" HorizontalAlignment="Left" Grid.ColumnSpan="2" VerticalAlignment="Bottom" Style="{StaticResource RoundedButtonStyle}"></Button>
-                    <!--Command="{Binding SaveGameConfig}"--> 
-            
+            <Button Content="Save" Grid.Column="0" Command="{Binding SaveGameConfig}" CommandParameter="{Binding ThisGameID}" HorizontalAlignment="Left" Grid.ColumnSpan="2" VerticalAlignment="Top"
+                    Style="{StaticResource RoundedButtonStyle}"></Button>
+
+            <Button Name ="MJ" Content="multiple jumps modifier" Grid.Column="0" Command="{Binding MultipleJumpModifier}" CommandParameter="{Binding MultipleJumpsAllowed}" HorizontalAlignment="Right" Grid.ColumnSpan="2" VerticalAlignment="Top"
+                    Style="{StaticResource RoundedButtonStyle}" FontSize="19" Width="230"></Button>
+
+            <TextBlock x:Name ="MJText" Grid.Column="0"  FontSize="19" Width="240" Grid.ColumnSpan="2" Background="Transparent" FontFamily="Sitka Subheading Semibold"
+                    Margin="0,33,0,0" HorizontalAlignment="Right" VerticalAlignment="Top" TextWrapping="Wrap" Foreground="{StaticResource burgundy}" Visibility="Hidden"></TextBlock>
+
             <Label Content="score" Grid.Column="1" Grid.Row="0" Style="{StaticResource LabelStyle}"></Label>
             <TextBlock Text="{Binding BlackCapturedRed}" Grid.Column="1" Grid.Row="1" Style="{StaticResource Score}" Foreground="{StaticResource redpiece}"></TextBlock>
             <TextBlock Text="{Binding BlackTurn}" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Style="{StaticResource Messages}" Foreground="{StaticResource blackpiece}"></TextBlock>
             <TextBlock Text="{Binding BlackWin}" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Style="{StaticResource Messages}" Foreground="{StaticResource blackpiece}"></TextBlock>
-            
+
             <Label Content="score" Grid.Column="1" Grid.Row="3" Style="{StaticResource LabelStyle}"></Label>
             <TextBlock Text="{Binding RedCapturedBlack}" Grid.Column="1" Grid.Row="4" Style="{StaticResource Score}" Foreground="{StaticResource blackpiece}"></TextBlock>
             <TextBlock Text="{Binding RedTurn}" Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2"  Style="{StaticResource Messages}" Foreground="{StaticResource redpiece}"></TextBlock>
             <TextBlock Text="{Binding RedWin}" Grid.Column="0" Grid.Row="4"  Grid.ColumnSpan="2" Style="{StaticResource Messages}" Foreground="{StaticResource redpiece}"></TextBlock>
 
         </Grid>
-        
+
     </Grid>
-    
+
 </Window>

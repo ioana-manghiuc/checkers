@@ -15,6 +15,7 @@ namespace checkers_.ViewModels
     {
         private CheckersBusinessLogic cbl;
         private ICommand saveGameConfig;
+        private ICommand multipleJumpModifier;
         public int ThisGameID { get; set;}
 
         public GameViewModel()
@@ -31,6 +32,7 @@ namespace checkers_.ViewModels
             BlackWin = cbl.BlackWin;
             RedTurn = cbl.RedsTurn;
             BlackTurn = cbl.BlackTurn;
+            MultipleJumpsAllowed = cbl.MultipleJumpsAllowed;
         }
 
         public ICommand SaveGameConfig
@@ -42,6 +44,18 @@ namespace checkers_.ViewModels
                     saveGameConfig = new RelayCommand<object>(cbl.SaveGame);
                 }
                 return saveGameConfig;
+            }
+        }
+
+        public ICommand MultipleJumpModifier
+        {
+            get
+            {
+                if(multipleJumpModifier == null)
+                {
+                    multipleJumpModifier = new RelayCommand<object>(cbl.MultipleJumpModifier);
+                }
+                return multipleJumpModifier;
             }
         }
 
@@ -161,7 +175,8 @@ namespace checkers_.ViewModels
                 }
             }
         }
-        public string blackTurn = "";
+
+        private string blackTurn = "";
         public string BlackTurn
         {
             get { return blackTurn; }
@@ -173,6 +188,21 @@ namespace checkers_.ViewModels
                     NotifyPropertyChanged("BlackTurn");
                 }
             }
-        }            
+        }
+
+        private bool multipleJumpsAllowed = false;
+        public bool MultipleJumpsAllowed
+        {
+            get { return multipleJumpsAllowed; }
+            set
+            {
+                if (value != multipleJumpsAllowed)
+                {
+                    multipleJumpsAllowed = value;
+                    NotifyPropertyChanged("MultipleJumpsAllowed");
+                }
+            }
+        }
+
     }
 }

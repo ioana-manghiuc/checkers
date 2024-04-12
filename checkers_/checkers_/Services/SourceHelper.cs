@@ -176,6 +176,7 @@ namespace checkers_.Services
             public int RedPieces { get; set; }
             public int CapturedBlackPieces { get; set; }
             public int CapturedRedPieces { get; set; }
+            public bool MultipleJumpsAllowed { get; set; }
         }
 
         public static void SelectGame(string label)
@@ -210,7 +211,8 @@ namespace checkers_.Services
                         BlackPieces = int.Parse(g.Element("BlackPieces").Value),
                         RedPieces = int.Parse(g.Element("RedPieces").Value),
                         CapturedBlackPieces = int.Parse(g.Element("CapturedBlackPieces").Value),
-                        CapturedRedPieces = int.Parse(g.Element("CapturedRedPieces").Value)
+                        CapturedRedPieces = int.Parse(g.Element("CapturedRedPieces").Value),
+                        MultipleJumpsAllowed = bool.Parse(g.Element("MultipleJumpsAllowed").Value)
                     }).ToList();
             }
             catch (Exception ex)
@@ -247,7 +249,8 @@ namespace checkers_.Services
                         BlackPieces = int.Parse(searchedGame.Element("BlackPieces").Value),
                         RedPieces = int.Parse(searchedGame.Element("RedPieces").Value),
                         CapturedBlackPieces = int.Parse(searchedGame.Element("CapturedBlackPieces").Value),
-                        CapturedRedPieces = int.Parse(searchedGame.Element("CapturedRedPieces").Value)
+                        CapturedRedPieces = int.Parse(searchedGame.Element("CapturedRedPieces").Value),
+                        MultipleJumpsAllowed = bool.Parse(searchedGame.Element("MultipleJumpsAllowed").Value)
                     };
                 }
             }
@@ -307,7 +310,7 @@ namespace checkers_.Services
             }
         }
 
-        public static void SaveGameInfo(int gameID, bool turn, int redPieces, int blackPieces, int capturedBlackPieces, int capturedRedPieces)
+        public static void SaveGameInfo(int gameID, bool turn, int redPieces, int blackPieces, int capturedBlackPieces, int capturedRedPieces, bool multipleJumpsAllowed)
         {
             try
             {
@@ -344,7 +347,11 @@ namespace checkers_.Services
 
                 XmlNode capturedRedPiecesNode = doc.CreateElement("CapturedRedPieces");
                 capturedRedPiecesNode.InnerText = capturedRedPieces.ToString();
-                gameNode.AppendChild(capturedRedPiecesNode);               
+                gameNode.AppendChild(capturedRedPiecesNode);
+
+                XmlNode multipleJumpsAllowedNode = doc.CreateElement("MultipleJumpsAllowed");
+                multipleJumpsAllowedNode.InnerText = multipleJumpsAllowed.ToString();
+                gameNode.AppendChild(multipleJumpsAllowedNode);
 
                 doc.DocumentElement.AppendChild(gameNode);
 
