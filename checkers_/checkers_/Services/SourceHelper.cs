@@ -362,5 +362,55 @@ namespace checkers_.Services
                 Console.WriteLine($"Error saving game info to XML: {ex.Message}");
             }
         }
+
+        public static bool GetJumpOptionStatus()
+        {
+            try
+            {
+                XDocument doc = XDocument.Load("Resources/jump_option.xml");
+                XElement jumpOptionElement = doc.Root.Element("Value");
+
+                if (jumpOptionElement != null)
+                {
+                    bool jumpOption = bool.Parse(jumpOptionElement.Value);
+                    return jumpOption;
+                }
+                else
+                {
+                    Console.WriteLine("Value element not found under JumpOption in XML.");
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error reading data from XML: {ex.Message}");
+                return false;
+            }
+        }
+
+        public static void SetJumpOptionStatus(bool option)
+        {
+            try
+            {
+                XDocument doc = XDocument.Load("Resources/jump_option.xml");
+                XElement jumpOptionElement = doc.Root.Element("Value");
+
+                if (jumpOptionElement != null)
+                {
+                    jumpOptionElement.SetValue(option.ToString());
+                    doc.Save("Resources/jump_option.xml");
+                    Console.WriteLine($"JumpOption value set to: {option}");
+                }
+                else
+                {
+                    Console.WriteLine("Value element not found under JumpOption in XML. Cannot update.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error updating data in XML: {ex.Message}");
+            }
+        }
+
     }
 }

@@ -79,7 +79,7 @@
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <Border Width="70" Height="70" BorderThickness="0">
-                                    <Button Command="{Binding ClickCommand}" CommandParameter="{Binding STile}">
+                                    <Button Command="{Binding ClickCommand}" CommandParameter="{Binding STile}" Click="ShowText">
                                         <Button.Template>
                                             <ControlTemplate>
                                                 <Image Source="{Binding STile.Image}" Stretch="UniformToFill"/>
@@ -110,8 +110,8 @@
             <Button Content="Save" Grid.Column="0" Command="{Binding SaveGameConfig}" CommandParameter="{Binding ThisGameID}" HorizontalAlignment="Left" Grid.ColumnSpan="2" VerticalAlignment="Top"
              Style="{StaticResource RoundedButtonStyle}"></Button>
 
-            <Button Content="multiple jumps allowed" Grid.Column="0" Command="{Binding MultipleJumpModifier}" CommandParameter="{Binding MultipleJumpsAllowed}" HorizontalAlignment="Right" Grid.ColumnSpan="2" VerticalAlignment="Top"
-             Style="{StaticResource RoundedButtonStyle}" FontSize="19" Width="230"></Button>
+            <TextBlock x:Name ="MJText" Grid.Column="0"  FontSize="19" Width="240" Grid.ColumnSpan="2" Background="Transparent" FontFamily="Sitka Subheading Semibold"
+                 Margin="0,33,0,0" HorizontalAlignment="Right" VerticalAlignment="Top" TextWrapping="Wrap" Foreground="{StaticResource burgundy}" Visibility="Hidden"></TextBlock>
 
             <Label Content="score" Grid.Column="1" Grid.Row="0" Style="{StaticResource LabelStyle}"></Label>
             <TextBlock Text="{Binding BlackCapturedRed}" Grid.Column="1" Grid.Row="1" Style="{StaticResource Score}" Foreground="{StaticResource redpiece}"></TextBlock>

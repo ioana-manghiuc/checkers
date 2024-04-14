@@ -1,4 +1,5 @@
-﻿using System;
+﻿using checkers_.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,6 +23,21 @@ namespace checkers_.Views
         public SavedGameWindow()
         {
             InitializeComponent();
+        }
+        private void ShowText(object sender, RoutedEventArgs e)
+        {
+            if (CheckersBusinessLogic.Modifier != 0)
+            {
+                if (CheckersBusinessLogic.Modifier == 1)
+                {
+                    MJText.Text = "(multiple jumps allowed)";
+                }
+                else if (CheckersBusinessLogic.Modifier == 2)
+                {
+                    MJText.Text = "(multiple jumps not allowed)";
+                }
+                MJText.Visibility = Visibility.Visible;
+            }
         }
     }
 }

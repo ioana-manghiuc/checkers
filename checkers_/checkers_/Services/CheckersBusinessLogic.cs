@@ -45,6 +45,10 @@ namespace checkers_.Services
                 RedPieces = gameInfo.RedPieces;
                 BlackPieces = gameInfo.BlackPieces;
                 MultipleJumpsAllowed = gameInfo.MultipleJumpsAllowed;
+                if (MultipleJumpsAllowed)
+                    Modifier = 1;
+                else if (!MultipleJumpsAllowed)
+                    Modifier = 2;
             }
             else
             {
@@ -57,7 +61,8 @@ namespace checkers_.Services
             this.board = board;
             this.gvm = gameViewModel;
             RedsTurn = "RED TURN";           
-            Console.WriteLine("Multiple jumps allowed: " + MultipleJumpsAllowed);   
+            MultipleJumpsAllowed = SourceHelper.GetJumpOptionStatus();
+            Console.WriteLine("\nMULTIPLE JUMPS constr: " + MultipleJumpsAllowed + "\n");
         }      
 
         private bool MovementAllowed(Tile first, Tile second)
@@ -85,6 +90,23 @@ namespace checkers_.Services
                 {
                     return true;
                 }
+            }
+            return false;
+        }
+
+       private bool JumpAvailable(Tile first, Tile second)
+        {
+            int rowDiff = second.Line - first.Line;
+            int colDiff = second.Column - first.Column;
+            int capturedRow = first.Line + rowDiff / 2;
+            int capturedCol = first.Column + colDiff / 2;
+
+            Tile tileToCapture = board[capturedRow][capturedCol];
+            tileToCapture.TileType = board[capturedRow][capturedCol].TileType;
+
+            if (tileToCapture.TileType != first.TileType && tileToCapture.TileType != Tile.ETileType.Empty)
+            {
+                return true;
             }
             return false;
         }
@@ -280,6 +302,14 @@ namespace checkers_.Services
                     else
                     {
                         GameStarted = true;
+                        if(gvm != null)
+                        {
+                            Jumps = gvm.MultipleJumpsAllowed;
+                            MultipleJumpsAllowed = gvm.MultipleJumpsAllowed;
+                            SourceHelper.SetJumpOptionStatus(gvm.MultipleJumpsAllowed);
+                        }                       
+                        Console.WriteLine("MULTIPLE JUMPS after game started:" + MultipleJumpsAllowed);
+                        Console.WriteLine("MULTIPLE JUMPS static:" + Jumps);
                         tile.Image = TileSelected(tile);
                         firstTile = tile;
                         isFirstClick = false;                                    
@@ -296,9 +326,7 @@ namespace checkers_.Services
                             (( gvm != null && gvm.RedPieces != 0 && gvm.BlackPieces != 0  ) || (sgvm.RedPieces != 0 && sgvm.BlackPieces != 0 && sgvm != null)))
                     {
                         if (secondTile.TileType == Tile.ETileType.Empty)
-                        {
-                            SwitchTurn(firstTile);
-                           
+                        {                           
                             // move conditions for men
                             if ((firstTile.TileType == Tile.ETileType.Red && firstTile.Line - secondTile.Line == 1) ||
                                 (firstTile.TileType == Tile.ETileType.Black && secondTile.Line - firstTile.Line == 1))
@@ -309,6 +337,11 @@ namespace checkers_.Services
                                 (firstTile.TileType == Tile.ETileType.Red && firstTile.Line - secondTile.Line == 2))
                             {
                                 SimpleJump(firstTile, secondTile);
+                                while(JumpAvailable(secondTile, firstTile) && MultipleJumpsAllowed)
+                                {
+                                    firstTile = secondTile;
+                                    isFirstClick = false;
+                                }
                             }
 
                             // move conditions for kings
@@ -321,7 +354,8 @@ namespace checkers_.Services
                                 (firstTile.Line - secondTile.Line == 2 || secondTile.Line - firstTile.Line == 2))
                             {
                                 SimpleJump(firstTile, secondTile);
-                            }                           
+                            }
+                            SwitchTurn(secondTile);
                         }
                         else
                         {
@@ -368,29 +402,14 @@ namespace checkers_.Services
 
         public void MultipleJumpModifier(object obj)
         {
-            if (Modifier == 0 || !GameStarted)
+            if (!GameStarted)
             {
                 if (gvm != null)
                 {
                     gvm.MultipleJumpsAllowed = !gvm.MultipleJumpsAllowed;
                     MultipleJumpsAllowed = gvm.MultipleJumpsAllowed;
-                    Console.WriteLine("Multiple jumps allowed status: " + MultipleJumpsAllowed);
-                    Console.WriteLine("Multiple jumps allowed GVM status: " + gvm.MultipleJumpsAllowed);
-                    if (gvm.MultipleJumpsAllowed)
-                        Modifier = 1;
-                    else if (!gvm.MultipleJumpsAllowed)
-                        Modifier = 2;
-                }
-                else
-                {
-                    sgvm.MultipleJumpsAllowed = !sgvm.MultipleJumpsAllowed;
-                    MultipleJumpsAllowed = sgvm.MultipleJumpsAllowed;
-                    Console.WriteLine("Multiple jumps allowed status: " + MultipleJumpsAllowed);
-                    Console.WriteLine("Multiple jumps allowed SGVM status: " + sgvm.MultipleJumpsAllowed);
-                    if (sgvm.MultipleJumpsAllowed)
-                        Modifier = 1;
-                    else if (!sgvm.MultipleJumpsAllowed)
-                        Modifier = 2;
+                    Jumps = gvm.MultipleJumpsAllowed;
+                    Console.WriteLine("jumps in modifier" + Jumps);
                 }
             }
             else
@@ -409,6 +428,7 @@ namespace checkers_.Services
         private bool multipleJumpsAllowed = false;
         private static int modifier = 0;
         private static bool gameStarted = false;
+        private static bool jumps = false;
         public int RedCapturedBlack { get { return redCapturedBlack; } set { redCapturedBlack = value; } }
         public int BlackCapturedRed { get { return blackCapturedRed; } set { blackCapturedRed = value; } }
         public int RedPieces { get { return redPieces; } set { redPieces = value; } }
@@ -421,5 +441,6 @@ namespace checkers_.Services
         public bool MultipleJumpsAllowed { get { return multipleJumpsAllowed; } set { multipleJumpsAllowed = value; } }
         public static int Modifier { get { return modifier; } set { modifier = value; } }
         public static bool GameStarted { get { return gameStarted; } set { gameStarted = value; } }
+        public static bool Jumps{ get { return jumps; } set { jumps = value; } }
     }
 }

@@ -28,14 +28,14 @@ namespace checkers_.Views
 
         private void HideButton(object sender, RoutedEventArgs e)
         {
-            if(CheckersBusinessLogic.Modifier != 0 || CheckersBusinessLogic.GameStarted)
+            if(CheckersBusinessLogic.GameStarted)
             {
                 MJ.Visibility = Visibility.Hidden;
-                if(CheckersBusinessLogic.Modifier == 1)
+                if(CheckersBusinessLogic.Jumps)
                 {
                     MJText.Text = "(multiple jumps allowed)";
                 }
-                else if(CheckersBusinessLogic.Modifier == 2 || CheckersBusinessLogic.Modifier == 0)
+                else if(!CheckersBusinessLogic.Jumps)
                 {
                     MJText.Text = "(multiple jumps not allowed)";
                 }
