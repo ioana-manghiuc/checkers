@@ -169,18 +169,25 @@ namespace checkers_.Services
                 }
             }
         }
-
+        private bool IsValidPosition(int line, int column)
+        {
+            return line >= 0 && line < board.Count && column >= 0 && column < board[0].Count;
+        }
         private bool RedJumpAvailable(Tile first)
         {
-            if (((board[first.Line - 1][first.Column - 1].TileType == Tile.ETileType.Black) ||
-                   (board[first.Line - 1][first.Column - 1].TileType == Tile.ETileType.BlackKing)) &&
-                   (board[first.Line - 2][first.Column - 2].TileType == Tile.ETileType.Empty))
+            if (IsValidPosition(first.Line - 1, first.Column - 1) &&
+                IsValidPosition(first.Line - 2, first.Column - 2) &&
+                ((board[first.Line - 1][first.Column - 1].TileType == Tile.ETileType.Black) ||
+                (board[first.Line - 1][first.Column - 1].TileType == Tile.ETileType.BlackKing)) &&
+                (board[first.Line - 2][first.Column - 2].TileType == Tile.ETileType.Empty))
             {
                 return true;
             }
-            else if (((board[first.Line - 1][first.Column + 1].TileType == Tile.ETileType.Black) ||
-                    (board[first.Line - 1][first.Column + 1].TileType == Tile.ETileType.BlackKing)) &&
-                    (board[first.Line - 2][first.Column + 2].TileType == Tile.ETileType.Empty))
+            else if (IsValidPosition(first.Line - 1, first.Column + 1) &&
+                     IsValidPosition(first.Line - 2, first.Column + 2) &&
+                     ((board[first.Line - 1][first.Column + 1].TileType == Tile.ETileType.Black) ||
+                     (board[first.Line - 1][first.Column + 1].TileType == Tile.ETileType.BlackKing)) &&
+                     (board[first.Line - 2][first.Column + 2].TileType == Tile.ETileType.Empty))
             {
                 return true;
             }
@@ -190,15 +197,19 @@ namespace checkers_.Services
 
         private bool BlackJumpAvailable(Tile first)
         {
-            if (((board[first.Line + 1][first.Column - 1].TileType == Tile.ETileType.Red) ||
-                    (board[first.Line + 1][first.Column - 1].TileType == Tile.ETileType.RedKing)) &&
-                    (board[first.Line + 2][first.Column - 2].TileType == Tile.ETileType.Empty))
+            if (IsValidPosition(first.Line + 1, first.Column - 1) &&
+                IsValidPosition(first.Line + 2, first.Column - 2) &&
+                ((board[first.Line + 1][first.Column - 1].TileType == Tile.ETileType.Red) ||
+                (board[first.Line + 1][first.Column - 1].TileType == Tile.ETileType.RedKing)) &&
+                (board[first.Line + 2][first.Column - 2].TileType == Tile.ETileType.Empty))
             {
                 return true;
             }
-            else if (((board[first.Line + 1][first.Column + 1].TileType == Tile.ETileType.Red) ||
-                (board[first.Line + 1][first.Column + 1].TileType == Tile.ETileType.RedKing)) &&
-                (board[first.Line + 2][first.Column + 2].TileType == Tile.ETileType.Empty))
+            else if (IsValidPosition(first.Line + 1, first.Column + 1) &&
+                     IsValidPosition(first.Line + 2, first.Column + 2) &&
+                     ((board[first.Line + 1][first.Column + 1].TileType == Tile.ETileType.Red) ||
+                     (board[first.Line + 1][first.Column + 1].TileType == Tile.ETileType.RedKing)) &&
+                     (board[first.Line + 2][first.Column + 2].TileType == Tile.ETileType.Empty))
             {
                 return true;
             }
@@ -208,27 +219,35 @@ namespace checkers_.Services
 
         private bool RedKingJumpAvailable(Tile first)
         {
-            if (((board[first.Line - 1][first.Column - 1].TileType == Tile.ETileType.Black) ||
-                    (board[first.Line - 1][first.Column - 1].TileType == Tile.ETileType.BlackKing)) &&
-                    (board[first.Line - 2][first.Column - 2].TileType == Tile.ETileType.Empty))
+            if (IsValidPosition(first.Line - 1, first.Column - 1) &&
+                IsValidPosition(first.Line - 2, first.Column - 2) &&
+                ((board[first.Line - 1][first.Column - 1].TileType == Tile.ETileType.Black) ||
+                (board[first.Line - 1][first.Column - 1].TileType == Tile.ETileType.BlackKing)) &&
+                (board[first.Line - 2][first.Column - 2].TileType == Tile.ETileType.Empty))
             {
                 return true;
             }
-            else if (((board[first.Line - 1][first.Column + 1].TileType == Tile.ETileType.Black) ||
-                   (board[first.Line - 1][first.Column + 1].TileType == Tile.ETileType.BlackKing)) &&
-                   (board[first.Line - 2][first.Column + 2].TileType == Tile.ETileType.Empty))
+            else if (IsValidPosition(first.Line - 1, first.Column + 1) &&
+                     IsValidPosition(first.Line - 2, first.Column + 2) &&
+                     ((board[first.Line - 1][first.Column + 1].TileType == Tile.ETileType.Black) ||
+                     (board[first.Line - 1][first.Column + 1].TileType == Tile.ETileType.BlackKing)) &&
+                     (board[first.Line - 2][first.Column + 2].TileType == Tile.ETileType.Empty))
             {
                 return true;
             }
-            if (((board[first.Line + 1][first.Column - 1].TileType == Tile.ETileType.Black) ||
-                 (board[first.Line + 1][first.Column - 1].TileType == Tile.ETileType.BlackKing)) &&
-                 (board[first.Line + 2][first.Column - 2].TileType == Tile.ETileType.Empty))
+            if (IsValidPosition(first.Line + 1, first.Column - 1) &&
+                IsValidPosition(first.Line + 2, first.Column - 2) &&
+                ((board[first.Line + 1][first.Column - 1].TileType == Tile.ETileType.Black) ||
+                (board[first.Line + 1][first.Column - 1].TileType == Tile.ETileType.BlackKing)) &&
+                (board[first.Line + 2][first.Column - 2].TileType == Tile.ETileType.Empty))
             {
                 return true;
             }
-            else if (((board[first.Line + 1][first.Column + 1].TileType == Tile.ETileType.Black) ||
-                (board[first.Line + 1][first.Column + 1].TileType == Tile.ETileType.BlackKing)) &&
-                (board[first.Line + 2][first.Column + 2].TileType == Tile.ETileType.Empty))
+            else if (IsValidPosition(first.Line + 1, first.Column + 1) &&
+                     IsValidPosition(first.Line + 2, first.Column + 2) &&
+                     ((board[first.Line + 1][first.Column + 1].TileType == Tile.ETileType.Black) ||
+                     (board[first.Line + 1][first.Column + 1].TileType == Tile.ETileType.BlackKing)) &&
+                     (board[first.Line + 2][first.Column + 2].TileType == Tile.ETileType.Empty))
             {
                 return true;
             }
@@ -237,27 +256,35 @@ namespace checkers_.Services
 
         private bool BlackKingJumpAvailable(Tile first)
         {
-            if (((board[first.Line - 1][first.Column - 1].TileType == Tile.ETileType.Black) ||
-                    (board[first.Line - 1][first.Column - 1].TileType == Tile.ETileType.BlackKing)) &&
-                    (board[first.Line - 2][first.Column - 2].TileType == Tile.ETileType.Empty))
+            if (IsValidPosition(first.Line - 1, first.Column - 1) &&
+                IsValidPosition(first.Line - 2, first.Column - 2) &&
+                ((board[first.Line - 1][first.Column - 1].TileType == Tile.ETileType.Black) ||
+                (board[first.Line - 1][first.Column - 1].TileType == Tile.ETileType.BlackKing)) &&
+                (board[first.Line - 2][first.Column - 2].TileType == Tile.ETileType.Empty))
             {
                 return true;
             }
-            else if (((board[first.Line - 1][first.Column + 1].TileType == Tile.ETileType.Black) ||
-                   (board[first.Line - 1][first.Column + 1].TileType == Tile.ETileType.BlackKing)) &&
-                   (board[first.Line - 2][first.Column + 2].TileType == Tile.ETileType.Empty))
+            else if (IsValidPosition(first.Line - 1, first.Column + 1) &&
+                     IsValidPosition(first.Line - 2, first.Column + 2) &&
+                     ((board[first.Line - 1][first.Column + 1].TileType == Tile.ETileType.Black) ||
+                     (board[first.Line - 1][first.Column + 1].TileType == Tile.ETileType.BlackKing)) &&
+                     (board[first.Line - 2][first.Column + 2].TileType == Tile.ETileType.Empty))
             {
                 return true;
             }
-            if (((board[first.Line + 1][first.Column - 1].TileType == Tile.ETileType.Black) ||
-                 (board[first.Line + 1][first.Column - 1].TileType == Tile.ETileType.BlackKing)) &&
-                 (board[first.Line + 2][first.Column - 2].TileType == Tile.ETileType.Empty))
+            if (IsValidPosition(first.Line + 1, first.Column - 1) &&
+                IsValidPosition(first.Line + 2, first.Column - 2) &&
+                ((board[first.Line + 1][first.Column - 1].TileType == Tile.ETileType.Black) ||
+                (board[first.Line + 1][first.Column - 1].TileType == Tile.ETileType.BlackKing)) &&
+                (board[first.Line + 2][first.Column - 2].TileType == Tile.ETileType.Empty))
             {
                 return true;
             }
-            else if (((board[first.Line + 1][first.Column + 1].TileType == Tile.ETileType.Black) ||
-                (board[first.Line + 1][first.Column + 1].TileType == Tile.ETileType.BlackKing)) &&
-                (board[first.Line + 2][first.Column + 2].TileType == Tile.ETileType.Empty))
+            else if (IsValidPosition(first.Line + 1, first.Column + 1) &&
+                     IsValidPosition(first.Line + 2, first.Column + 2) &&
+                     ((board[first.Line + 1][first.Column + 1].TileType == Tile.ETileType.Black) ||
+                     (board[first.Line + 1][first.Column + 1].TileType == Tile.ETileType.BlackKing)) &&
+                     (board[first.Line + 2][first.Column + 2].TileType == Tile.ETileType.Empty))
             {
                 return true;
             }
@@ -416,7 +443,6 @@ namespace checkers_.Services
                             SourceHelper.SetJumpOptionStatus(gvm.MultipleJumpsAllowed);
                         }                       
                         Console.WriteLine("MULTIPLE JUMPS after game started:" + MultipleJumpsAllowed);
-                        Console.WriteLine("MULTIPLE JUMPS static:" + Jumps);
                         tile.Image = TileSelected(tile);
                         firstTile = tile;
                         isFirstClick = false;                                    
