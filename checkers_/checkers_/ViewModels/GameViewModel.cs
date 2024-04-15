@@ -76,7 +76,13 @@ namespace checkers_.ViewModels
             return result;
         }
 
-        public ObservableCollection<ObservableCollection<TileViewModel>> GameBoard { get; set; }
+        public void UpdateBoard(Tile tile)
+        {
+            GameBoard[tile.Line][tile.Column].STile.Image = tile.Image;
+            GameBoard[tile.Line][tile.Column].STile.TileType = tile.TileType;
+        }
+
+        public static ObservableCollection<ObservableCollection<TileViewModel>> GameBoard { get; set; }
 
         private int redCapturedBlack = 0;
         public int RedCapturedBlack

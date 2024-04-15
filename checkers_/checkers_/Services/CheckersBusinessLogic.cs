@@ -65,86 +65,6 @@ namespace checkers_.Services
             Console.WriteLine("\nMULTIPLE JUMPS constr: " + MultipleJumpsAllowed + "\n");
         }      
 
-        private bool MovementAllowed(Tile first, Tile second)
-        {
-
-            if (first.TileType == Tile.ETileType.Red && RedTurn)
-            {
-                if (first.Line > second.Line && first.Column != second.Column && first.Line - second.Line <= 2)
-                {
-                    return true;
-                }
-            }
-            else if (first.TileType == Tile.ETileType.Black && !RedTurn)
-            {
-                if (first.Line < second.Line && first.Column != second.Column && second.Line - first.Line <= 2)
-                {
-                    return true;
-                }
-            }
-            else if ((first.TileType == Tile.ETileType.RedKing && RedTurn) || (first.TileType == Tile.ETileType.BlackKing && !RedTurn))
-            {
-                if ((first.Line > second.Line || first.Line < second.Line) &&
-                    (first.Column != second.Column || first.Column != second.Column) &&
-                    (first.Line - second.Line <= 2 || second.Line - first.Line <= 2))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-       private bool JumpAvailable(Tile first, Tile second)
-        {
-            int rowDiff = second.Line - first.Line;
-            int colDiff = second.Column - first.Column;
-            int capturedRow = first.Line + rowDiff / 2;
-            int capturedCol = first.Column + colDiff / 2;
-
-            Tile tileToCapture = board[capturedRow][capturedCol];
-            tileToCapture.TileType = board[capturedRow][capturedCol].TileType;
-
-            if (tileToCapture.TileType != first.TileType && tileToCapture.TileType != Tile.ETileType.Empty)
-            {
-                return true;
-            }
-            return false;
-        }
-
-        private void SwitchTurn(Tile one)
-        {
-            if (one.TileType == Tile.ETileType.Red || one.TileType == Tile.ETileType.RedKing)
-            {
-                RedTurn = false;
-                if (gvm != null)
-                {                   
-                    gvm.RedTurn = "";                   
-                    gvm.BlackTurn = "BLACK TURN";
-                    
-                }
-                else
-                {
-                    sgvm.RedTurn = "";
-                    sgvm.BlackTurn = "BLACK TURN";
-                }
-                
-            }
-            else if (one.TileType == Tile.ETileType.Black || one.TileType == Tile.ETileType.BlackKing)
-            {
-                RedTurn = true;
-                if(gvm != null)
-                {
-                    gvm.BlackTurn = "";
-                    gvm.RedTurn = "RED TURN";
-                }
-                else
-                {
-                    sgvm.BlackTurn = "";
-                    sgvm.RedTurn = "RED TURN";
-                }                           
-            }
-        }
-
         private string TileSelected(Tile tile)
         {
             if (tile.TileType == Tile.ETileType.Red)
@@ -185,6 +105,184 @@ namespace checkers_.Services
                 return "/checkers_;component/Resources/king_red.png";
             }
             return "";
+        }
+
+        private bool MovementAllowed(Tile first, Tile second)
+        {
+
+            if (first.TileType == Tile.ETileType.Red && RedTurn)
+            {
+                if (first.Line > second.Line && first.Column != second.Column && first.Line - second.Line <= 2)
+                {
+                    return true;
+                }
+            }
+            else if (first.TileType == Tile.ETileType.Black && !RedTurn)
+            {
+                if (first.Line < second.Line && first.Column != second.Column && second.Line - first.Line <= 2)
+                {
+                    return true;
+                }
+            }
+            else if ((first.TileType == Tile.ETileType.RedKing && RedTurn) || (first.TileType == Tile.ETileType.BlackKing && !RedTurn))
+            {
+                if ((first.Line > second.Line || first.Line < second.Line) &&
+                    (first.Column != second.Column || first.Column != second.Column) &&
+                    (first.Line - second.Line <= 2 || second.Line - first.Line <= 2))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private void SwitchTurn(Tile one)
+        {
+            if (one.TileType == Tile.ETileType.Red || one.TileType == Tile.ETileType.RedKing)
+            {
+                RedTurn = false;
+                if (gvm != null)
+                {
+                    gvm.RedTurn = "";
+                    gvm.BlackTurn = "BLACK TURN";
+
+                }
+                else
+                {
+                    sgvm.RedTurn = "";
+                    sgvm.BlackTurn = "BLACK TURN";
+                }
+
+            }
+            else if (one.TileType == Tile.ETileType.Black || one.TileType == Tile.ETileType.BlackKing)
+            {
+                RedTurn = true;
+                if (gvm != null)
+                {
+                    gvm.BlackTurn = "";
+                    gvm.RedTurn = "RED TURN";
+                }
+                else
+                {
+                    sgvm.BlackTurn = "";
+                    sgvm.RedTurn = "RED TURN";
+                }
+            }
+        }
+
+        private bool RedJumpAvailable(Tile first)
+        {
+            if (((board[first.Line - 1][first.Column - 1].TileType == Tile.ETileType.Black) ||
+                   (board[first.Line - 1][first.Column - 1].TileType == Tile.ETileType.BlackKing)) &&
+                   (board[first.Line - 2][first.Column - 2].TileType == Tile.ETileType.Empty))
+            {
+                return true;
+            }
+            else if (((board[first.Line - 1][first.Column + 1].TileType == Tile.ETileType.Black) ||
+                    (board[first.Line - 1][first.Column + 1].TileType == Tile.ETileType.BlackKing)) &&
+                    (board[first.Line - 2][first.Column + 2].TileType == Tile.ETileType.Empty))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        private bool BlackJumpAvailable(Tile first)
+        {
+            if (((board[first.Line + 1][first.Column - 1].TileType == Tile.ETileType.Red) ||
+                    (board[first.Line + 1][first.Column - 1].TileType == Tile.ETileType.RedKing)) &&
+                    (board[first.Line + 2][first.Column - 2].TileType == Tile.ETileType.Empty))
+            {
+                return true;
+            }
+            else if (((board[first.Line + 1][first.Column + 1].TileType == Tile.ETileType.Red) ||
+                (board[first.Line + 1][first.Column + 1].TileType == Tile.ETileType.RedKing)) &&
+                (board[first.Line + 2][first.Column + 2].TileType == Tile.ETileType.Empty))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        private bool RedKingJumpAvailable(Tile first)
+        {
+            if (((board[first.Line - 1][first.Column - 1].TileType == Tile.ETileType.Black) ||
+                    (board[first.Line - 1][first.Column - 1].TileType == Tile.ETileType.BlackKing)) &&
+                    (board[first.Line - 2][first.Column - 2].TileType == Tile.ETileType.Empty))
+            {
+                return true;
+            }
+            else if (((board[first.Line - 1][first.Column + 1].TileType == Tile.ETileType.Black) ||
+                   (board[first.Line - 1][first.Column + 1].TileType == Tile.ETileType.BlackKing)) &&
+                   (board[first.Line - 2][first.Column + 2].TileType == Tile.ETileType.Empty))
+            {
+                return true;
+            }
+            if (((board[first.Line + 1][first.Column - 1].TileType == Tile.ETileType.Black) ||
+                 (board[first.Line + 1][first.Column - 1].TileType == Tile.ETileType.BlackKing)) &&
+                 (board[first.Line + 2][first.Column - 2].TileType == Tile.ETileType.Empty))
+            {
+                return true;
+            }
+            else if (((board[first.Line + 1][first.Column + 1].TileType == Tile.ETileType.Black) ||
+                (board[first.Line + 1][first.Column + 1].TileType == Tile.ETileType.BlackKing)) &&
+                (board[first.Line + 2][first.Column + 2].TileType == Tile.ETileType.Empty))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        private bool BlackKingJumpAvailable(Tile first)
+        {
+            if (((board[first.Line - 1][first.Column - 1].TileType == Tile.ETileType.Black) ||
+                    (board[first.Line - 1][first.Column - 1].TileType == Tile.ETileType.BlackKing)) &&
+                    (board[first.Line - 2][first.Column - 2].TileType == Tile.ETileType.Empty))
+            {
+                return true;
+            }
+            else if (((board[first.Line - 1][first.Column + 1].TileType == Tile.ETileType.Black) ||
+                   (board[first.Line - 1][first.Column + 1].TileType == Tile.ETileType.BlackKing)) &&
+                   (board[first.Line - 2][first.Column + 2].TileType == Tile.ETileType.Empty))
+            {
+                return true;
+            }
+            if (((board[first.Line + 1][first.Column - 1].TileType == Tile.ETileType.Black) ||
+                 (board[first.Line + 1][first.Column - 1].TileType == Tile.ETileType.BlackKing)) &&
+                 (board[first.Line + 2][first.Column - 2].TileType == Tile.ETileType.Empty))
+            {
+                return true;
+            }
+            else if (((board[first.Line + 1][first.Column + 1].TileType == Tile.ETileType.Black) ||
+                (board[first.Line + 1][first.Column + 1].TileType == Tile.ETileType.BlackKing)) &&
+                (board[first.Line + 2][first.Column + 2].TileType == Tile.ETileType.Empty))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        private bool JumpAvailable(Tile first)
+        {
+            if (first.TileType == Tile.ETileType.Red)
+            {
+                return RedJumpAvailable(first);
+            }
+            else if (first.TileType == Tile.ETileType.Black)
+            {
+                return BlackJumpAvailable(first);
+            }
+            else if (first.TileType == Tile.ETileType.RedKing)
+            {
+                return RedKingJumpAvailable(first);
+            }
+            else if (first.TileType == Tile.ETileType.BlackKing)
+            {
+                return BlackKingJumpAvailable(first);
+            }
+            return false;
         }
 
         private void SimpleMove(Tile first, Tile second)
@@ -278,6 +376,15 @@ namespace checkers_.Services
                 board[second.Line][second.Column] = second;
                 board[capturedRow][capturedCol].TileType = Tile.ETileType.Empty;
                 board[capturedRow][capturedCol].Image = "/checkers_;component/Resources/empty_cell.png";
+
+                if (gvm != null)
+                {
+                    gvm.UpdateBoard(board[capturedRow][capturedCol]);
+                }
+                else
+                {
+                    sgvm.UpdateBoard(board[capturedRow][capturedCol]);
+                }
             }
             else
             {
@@ -332,16 +439,20 @@ namespace checkers_.Services
                                 (firstTile.TileType == Tile.ETileType.Black && secondTile.Line - firstTile.Line == 1))
                             {
                                 SimpleMove(firstTile, secondTile);
+                                SwitchTurn(secondTile);
                             }
                             if ((firstTile.TileType == Tile.ETileType.Black && secondTile.Line - firstTile.Line == 2) || 
                                 (firstTile.TileType == Tile.ETileType.Red && firstTile.Line - secondTile.Line == 2))
                             {
                                 SimpleJump(firstTile, secondTile);
-                                while(JumpAvailable(secondTile, firstTile) && MultipleJumpsAllowed)
+                                while (JumpAvailable(secondTile) && MultipleJumpsAllowed)
                                 {
                                     firstTile = secondTile;
                                     isFirstClick = false;
+                                    tile.Image = DeselectTile(tile);
+                                    return;
                                 }
+                                SwitchTurn(secondTile);
                             }
 
                             // move conditions for kings
@@ -349,13 +460,15 @@ namespace checkers_.Services
                                 (firstTile.Line - secondTile.Line == 1 || secondTile.Line - firstTile.Line == 1))
                             {
                                 SimpleMove(firstTile, secondTile);
+                                SwitchTurn(secondTile);
                             }
                             if ((firstTile.TileType == Tile.ETileType.RedKing || firstTile.TileType == Tile.ETileType.BlackKing) &&
                                 (firstTile.Line - secondTile.Line == 2 || secondTile.Line - firstTile.Line == 2))
                             {
                                 SimpleJump(firstTile, secondTile);
+                                SwitchTurn(secondTile);
                             }
-                            SwitchTurn(secondTile);
+                            //SwitchTurn(secondTile);
                         }
                         else
                         {
