@@ -23,6 +23,7 @@ namespace checkers_.Services
 
         public CheckersBusinessLogic(ObservableCollection<ObservableCollection<Tile>> board, SavedGameViewModel sgvm)
         {
+            tileForJump = new Tile();
             this.board = board;
             this.sgvm = sgvm;
             GameInfo gameInfo = SourceHelper.GetGameWithID(SourceHelper.GameID);
@@ -41,10 +42,15 @@ namespace checkers_.Services
                     BlackTurn = "BLACK TURN";
                 }
                 RedCapturedBlack = gameInfo.CapturedBlackPieces;
+                sgvm.RedCapturedBlack = gameInfo.CapturedBlackPieces;
                 BlackCapturedRed = gameInfo.CapturedRedPieces;
+                sgvm.BlackCapturedRed = gameInfo.CapturedRedPieces;
                 RedPieces = gameInfo.RedPieces;
+                sgvm.RedPieces = gameInfo.RedPieces;
                 BlackPieces = gameInfo.BlackPieces;
+                sgvm.BlackPieces = gameInfo.BlackPieces;
                 MultipleJumpsAllowed = gameInfo.MultipleJumpsAllowed;
+                sgvm.MultipleJumpsAllowed = gameInfo.MultipleJumpsAllowed;
                 if (MultipleJumpsAllowed)
                     Modifier = 1;
                 else if (!MultipleJumpsAllowed)
@@ -58,6 +64,7 @@ namespace checkers_.Services
 
         public CheckersBusinessLogic(ObservableCollection<ObservableCollection<Tile>> board, GameViewModel gameViewModel)
         {
+            tileForJump = new Tile();
             this.board = board;
             this.gvm = gameViewModel;
             RedsTurn = "RED TURN";           
@@ -258,32 +265,32 @@ namespace checkers_.Services
         {
             if (IsValidPosition(first.Line - 1, first.Column - 1) &&
                 IsValidPosition(first.Line - 2, first.Column - 2) &&
-                ((board[first.Line - 1][first.Column - 1].TileType == Tile.ETileType.Black) ||
-                (board[first.Line - 1][first.Column - 1].TileType == Tile.ETileType.BlackKing)) &&
+                ((board[first.Line - 1][first.Column - 1].TileType == Tile.ETileType.Red) ||
+                (board[first.Line - 1][first.Column - 1].TileType == Tile.ETileType.RedKing)) &&
                 (board[first.Line - 2][first.Column - 2].TileType == Tile.ETileType.Empty))
             {
                 return true;
             }
             else if (IsValidPosition(first.Line - 1, first.Column + 1) &&
                      IsValidPosition(first.Line - 2, first.Column + 2) &&
-                     ((board[first.Line - 1][first.Column + 1].TileType == Tile.ETileType.Black) ||
-                     (board[first.Line - 1][first.Column + 1].TileType == Tile.ETileType.BlackKing)) &&
+                     ((board[first.Line - 1][first.Column + 1].TileType == Tile.ETileType.Red) ||
+                     (board[first.Line - 1][first.Column + 1].TileType == Tile.ETileType.RedKing)) &&
                      (board[first.Line - 2][first.Column + 2].TileType == Tile.ETileType.Empty))
             {
                 return true;
             }
             if (IsValidPosition(first.Line + 1, first.Column - 1) &&
                 IsValidPosition(first.Line + 2, first.Column - 2) &&
-                ((board[first.Line + 1][first.Column - 1].TileType == Tile.ETileType.Black) ||
-                (board[first.Line + 1][first.Column - 1].TileType == Tile.ETileType.BlackKing)) &&
+                ((board[first.Line + 1][first.Column - 1].TileType == Tile.ETileType.Red) ||
+                (board[first.Line + 1][first.Column - 1].TileType == Tile.ETileType.RedKing)) &&
                 (board[first.Line + 2][first.Column - 2].TileType == Tile.ETileType.Empty))
             {
                 return true;
             }
             else if (IsValidPosition(first.Line + 1, first.Column + 1) &&
                      IsValidPosition(first.Line + 2, first.Column + 2) &&
-                     ((board[first.Line + 1][first.Column + 1].TileType == Tile.ETileType.Black) ||
-                     (board[first.Line + 1][first.Column + 1].TileType == Tile.ETileType.BlackKing)) &&
+                     ((board[first.Line + 1][first.Column + 1].TileType == Tile.ETileType.Red) ||
+                     (board[first.Line + 1][first.Column + 1].TileType == Tile.ETileType.RedKing)) &&
                      (board[first.Line + 2][first.Column + 2].TileType == Tile.ETileType.Empty))
             {
                 return true;
@@ -350,6 +357,7 @@ namespace checkers_.Services
                             gvm.RedTurn = "";
                             gvm.BlackTurn = "";
                             gvm.RedWin = "RED WINS";
+                            GameEnded = true;
                             sh.SaveStatistics(false, true, gvm.RedPieces);
                         }
                     }
@@ -362,6 +370,8 @@ namespace checkers_.Services
                             sgvm.RedTurn = "";
                             sgvm.BlackTurn = "";
                             sgvm.RedWin = "RED WINS";
+                            GameEnded = true;
+                            Console.WriteLine("Red pieces CBL: " + sgvm.RedPieces);
                             sh.SaveStatistics(false, true, sgvm.RedPieces);
                         }
                     }
@@ -377,6 +387,7 @@ namespace checkers_.Services
                             gvm.RedTurn = "";
                             gvm.BlackTurn = "";
                             gvm.BlackWin = "BLACK WINS";
+                            GameEnded = true;
                             sh.SaveStatistics(true, false, gvm.BlackPieces);
                         }
                     }
@@ -389,6 +400,7 @@ namespace checkers_.Services
                             sgvm.RedTurn = "";
                             sgvm.BlackTurn = "";
                             sgvm.BlackWin = "BLACK WINS";
+                            GameEnded = true;
                             sh.SaveStatistics(true, false, sgvm.BlackPieces);
                         }
                     }                  
@@ -443,9 +455,18 @@ namespace checkers_.Services
                             SourceHelper.SetJumpOptionStatus(gvm.MultipleJumpsAllowed);
                         }                       
                         Console.WriteLine("MULTIPLE JUMPS after game started:" + MultipleJumpsAllowed);
-                        tile.Image = TileSelected(tile);
-                        firstTile = tile;
-                        isFirstClick = false;                                    
+                        if(tileForJump.TileType != Tile.ETileType.None &&
+                            tile.Line != tileForJump.Line && tile.Column != tileForJump.Column)
+                        {
+                            string err = $"You must select tile at\nLine: {tileForJump.Line}\nColumn:{tileForJump.Column}";
+                            MessageBox.Show(err, "", MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
+                        else
+                        {
+                            tile.Image = TileSelected(tile);
+                            firstTile = tile;
+                            isFirstClick = false;
+                        }                                                      
                     }
                 }
             }
@@ -465,20 +486,26 @@ namespace checkers_.Services
                                 (firstTile.TileType == Tile.ETileType.Black && secondTile.Line - firstTile.Line == 1))
                             {
                                 SimpleMove(firstTile, secondTile);
-                                SwitchTurn(secondTile);
+                                if(!GameEnded)
+                                    SwitchTurn(secondTile);
                             }
                             if ((firstTile.TileType == Tile.ETileType.Black && secondTile.Line - firstTile.Line == 2) || 
                                 (firstTile.TileType == Tile.ETileType.Red && firstTile.Line - secondTile.Line == 2))
                             {
                                 SimpleJump(firstTile, secondTile);
+                                //if (count == 0)
+                                //    { tileForJump = secondTile;}
+                                Console.WriteLine("Jumps Tile: " + tileForJump.Line + " " + tileForJump.Column + " " + tileForJump.TileType.ToString());
                                 while (JumpAvailable(secondTile) && MultipleJumpsAllowed)
                                 {
+                                    //count++;
                                     firstTile = secondTile;
                                     isFirstClick = false;
                                     tile.Image = DeselectTile(tile);
                                     return;
                                 }
-                                SwitchTurn(secondTile);
+                                if (!GameEnded)
+                                { SwitchTurn(secondTile); tileForJump.TileType = Tile.ETileType.None; /*count = 0;*/}
                             }
 
                             // move conditions for kings
@@ -486,15 +513,26 @@ namespace checkers_.Services
                                 (firstTile.Line - secondTile.Line == 1 || secondTile.Line - firstTile.Line == 1))
                             {
                                 SimpleMove(firstTile, secondTile);
-                                SwitchTurn(secondTile);
+                                if (!GameEnded)
+                                    SwitchTurn(secondTile);
                             }
                             if ((firstTile.TileType == Tile.ETileType.RedKing || firstTile.TileType == Tile.ETileType.BlackKing) &&
                                 (firstTile.Line - secondTile.Line == 2 || secondTile.Line - firstTile.Line == 2))
                             {
                                 SimpleJump(firstTile, secondTile);
-                                SwitchTurn(secondTile);
+                                //if (count == 0)
+                                //{ tileForJump = secondTile;}
+                                Console.WriteLine("Jumps Tile: " + tileForJump.Line + " " + tileForJump.Column + " " + tileForJump.TileType.ToString());
+                                while (JumpAvailable(secondTile) && MultipleJumpsAllowed)
+                                {
+                                    firstTile = secondTile;
+                                    isFirstClick = false;
+                                    tile.Image = DeselectTile(tile);
+                                    return;
+                                }
+                                if (!GameEnded)
+                                { SwitchTurn(secondTile); tileForJump.TileType = Tile.ETileType.None;/* count = 0;*/}
                             }
-                            //SwitchTurn(secondTile);
                         }
                         else
                         {
@@ -529,11 +567,13 @@ namespace checkers_.Services
             int id2 = SourceHelper.GetNextGameID();
             if (gvm != null)
             {
+                Console.WriteLine(gvm.RedPieces);
                 SourceHelper.SaveGameInfo(id2, RedTurn, gvm.BlackPieces, gvm.RedPieces, gvm.RedCapturedBlack, gvm.BlackCapturedRed, gvm.MultipleJumpsAllowed);
                 SourceHelper.SaveBoard(id2, board);
             }
             else
             {
+                Console.WriteLine(sgvm.RedPieces);
                 SourceHelper.SaveGameInfo(id2, RedTurn, sgvm.BlackPieces, sgvm.RedPieces, sgvm.RedCapturedBlack, sgvm.BlackCapturedRed, sgvm.MultipleJumpsAllowed);
                 SourceHelper.SaveBoard(id2, board);
             }          
@@ -557,7 +597,7 @@ namespace checkers_.Services
             }
         }
 
-        private Tile firstTile, secondTile;
+        private Tile firstTile, secondTile, tileForJump;
         private bool isFirstClick = true;
         private int redCapturedBlack = 0;
         private int blackCapturedRed = 0;
@@ -568,6 +608,7 @@ namespace checkers_.Services
         private static int modifier = 0;
         private static bool gameStarted = false;
         private static bool jumps = false;
+        private bool gameEnded = false;
         public int RedCapturedBlack { get { return redCapturedBlack; } set { redCapturedBlack = value; } }
         public int BlackCapturedRed { get { return blackCapturedRed; } set { blackCapturedRed = value; } }
         public int RedPieces { get { return redPieces; } set { redPieces = value; } }
@@ -581,5 +622,6 @@ namespace checkers_.Services
         public static int Modifier { get { return modifier; } set { modifier = value; } }
         public static bool GameStarted { get { return gameStarted; } set { gameStarted = value; } }
         public static bool Jumps{ get { return jumps; } set { jumps = value; } }
+        public bool GameEnded { get { return gameEnded; } set { gameEnded = value; } }
     }
 }

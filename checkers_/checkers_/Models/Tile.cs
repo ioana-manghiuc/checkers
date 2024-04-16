@@ -20,7 +20,7 @@ namespace checkers_.Models
             BlackKing
         }
 
-        public Tile() { Line = 0; Column = 0; Image = ""; }
+        public Tile() { Line = 0; Column = 0; Image = "/checkers_;component/Resources/empty_cell.png"; TileType = ETileType.None; }
         public Tile(int line, int column, string image)
         {
             Line = line;

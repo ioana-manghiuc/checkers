@@ -60,7 +60,9 @@ namespace checkers_.Services
             if(blackState)
             {
                 svm.BlackWins++;
-                if(winnersPieces > MaxBlackPieces)
+                Console.WriteLine("Black pieces: " + winnersPieces);
+                Console.WriteLine("Max black pieces: " + svm.MaxBlackPieces);
+                if (winnersPieces > svm.MaxBlackPieces)
                 {
                     svm.MaxBlackPieces = winnersPieces;
                 }
@@ -68,7 +70,9 @@ namespace checkers_.Services
             else if(redState)
             {
                 svm.RedWins++;
-                if(winnersPieces > MaxRedPieces)
+                Console.WriteLine("Red pieces: " + winnersPieces);
+                Console.WriteLine("Max red pieces: " + svm.MaxRedPieces);
+                if(winnersPieces > svm.MaxRedPieces)
                 {
                     svm.MaxRedPieces = winnersPieces;
                 }
