@@ -28,6 +28,12 @@ namespace checkers_.ViewModels
             this.cbl = cbl;
         }
 
+        public TileViewModel(int id, int line, int column, string photo, Tile.ETileType type, CheckersBusinessLogic cbl)
+        {
+            STile = new Tile(id,line, column, photo, type);
+            this.cbl = cbl;
+        }
+
         public Tile STile
         {
             get { return sTile; }

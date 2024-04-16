@@ -23,7 +23,6 @@ namespace checkers_.Services
 
         public CheckersBusinessLogic(ObservableCollection<ObservableCollection<Tile>> board, SavedGameViewModel sgvm)
         {
-            tileForJump = new Tile();
             this.board = board;
             this.sgvm = sgvm;
             GameInfo gameInfo = SourceHelper.GetGameWithID(SourceHelper.GameID);
@@ -64,7 +63,6 @@ namespace checkers_.Services
 
         public CheckersBusinessLogic(ObservableCollection<ObservableCollection<Tile>> board, GameViewModel gameViewModel)
         {
-            tileForJump = new Tile();
             this.board = board;
             this.gvm = gameViewModel;
             RedsTurn = "RED TURN";           
@@ -323,12 +321,15 @@ namespace checkers_.Services
         {
             string tempImage = first.Image;
             Tile.ETileType tempType = first.TileType;
+            int tempId = first.Id; 
 
             first.Image = second.Image;
             first.TileType = second.TileType;
+            first.Id = second.Id; 
 
             second.Image = tempImage;
             second.TileType = tempType;
+            second.Id = tempId; 
 
             board[first.Line][first.Column] = first;
             board[second.Line][second.Column] = second;
@@ -404,12 +405,18 @@ namespace checkers_.Services
                             sh.SaveStatistics(true, false, sgvm.BlackPieces);
                         }
                     }                  
-                }             
+                }
+
+                int tempIdToCapture = tileToCapture.Id;
+                int tempFirstId = first.Id;
 
                 second.TileType = first.TileType;
                 second.Image = first.Image;
                 first.TileType = Tile.ETileType.Empty;
                 first.Image = "/checkers_;component/Resources/empty_cell.png";
+
+                second.Id = tempFirstId;
+                first.Id = tempIdToCapture;
 
                 board[first.Line][first.Column] = first;
                 board[second.Line][second.Column] = second;
@@ -424,10 +431,6 @@ namespace checkers_.Services
                 {
                     sgvm.UpdateBoard(board[capturedRow][capturedCol]);
                 }
-            }
-            else
-            {
-                MessageBox.Show("you can't move there! - jump", "", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -455,11 +458,9 @@ namespace checkers_.Services
                             SourceHelper.SetJumpOptionStatus(gvm.MultipleJumpsAllowed);
                         }                       
                         Console.WriteLine("MULTIPLE JUMPS after game started:" + MultipleJumpsAllowed);
-                        if(tileForJump.TileType != Tile.ETileType.None &&
-                            tile.Line != tileForJump.Line && tile.Column != tileForJump.Column)
+                        if (tile.Id != id && count != 0)
                         {
-                            string err = $"You must select tile at\nLine: {tileForJump.Line}\nColumn:{tileForJump.Column}";
-                            MessageBox.Show(err, "", MessageBoxButton.OK, MessageBoxImage.Error);
+                            MessageBox.Show("wrong piece selected!", "", MessageBoxButton.OK, MessageBoxImage.Error);
                         }
                         else
                         {
@@ -493,19 +494,22 @@ namespace checkers_.Services
                                 (firstTile.TileType == Tile.ETileType.Red && firstTile.Line - secondTile.Line == 2))
                             {
                                 SimpleJump(firstTile, secondTile);
-                                //if (count == 0)
-                                //    { tileForJump = secondTile;}
-                                Console.WriteLine("Jumps Tile: " + tileForJump.Line + " " + tileForJump.Column + " " + tileForJump.TileType.ToString());
+                                if (count == 0)
+                                { 
+                                    id = secondTile.Id;
+                                    Console.WriteLine("second tile id: " + secondTile.Id);
+                                    Console.WriteLine("tile id: " + id);
+                                }
                                 while (JumpAvailable(secondTile) && MultipleJumpsAllowed)
                                 {
-                                    //count++;
+                                    count++;
                                     firstTile = secondTile;
                                     isFirstClick = false;
                                     tile.Image = DeselectTile(tile);
                                     return;
                                 }
                                 if (!GameEnded)
-                                { SwitchTurn(secondTile); tileForJump.TileType = Tile.ETileType.None; /*count = 0;*/}
+                                { SwitchTurn(secondTile); count = 0; }
                             }
 
                             // move conditions for kings
@@ -520,18 +524,22 @@ namespace checkers_.Services
                                 (firstTile.Line - secondTile.Line == 2 || secondTile.Line - firstTile.Line == 2))
                             {
                                 SimpleJump(firstTile, secondTile);
-                                //if (count == 0)
-                                //{ tileForJump = secondTile;}
-                                Console.WriteLine("Jumps Tile: " + tileForJump.Line + " " + tileForJump.Column + " " + tileForJump.TileType.ToString());
+                                if (count == 0)
+                                {
+                                    id = secondTile.Id;
+                                    Console.WriteLine("second tile id: " + secondTile.Id);
+                                    Console.WriteLine("tile id: " + id);
+                                }
                                 while (JumpAvailable(secondTile) && MultipleJumpsAllowed)
                                 {
+                                    count++;
                                     firstTile = secondTile;
                                     isFirstClick = false;
                                     tile.Image = DeselectTile(tile);
                                     return;
                                 }
                                 if (!GameEnded)
-                                { SwitchTurn(secondTile); tileForJump.TileType = Tile.ETileType.None;/* count = 0;*/}
+                                { SwitchTurn(secondTile); count = 0; }
                             }
                         }
                         else
@@ -597,7 +605,7 @@ namespace checkers_.Services
             }
         }
 
-        private Tile firstTile, secondTile, tileForJump;
+        private Tile firstTile, secondTile;
         private bool isFirstClick = true;
         private int redCapturedBlack = 0;
         private int blackCapturedRed = 0;
@@ -609,6 +617,8 @@ namespace checkers_.Services
         private static bool gameStarted = false;
         private static bool jumps = false;
         private bool gameEnded = false;
+        private int count = 0;
+        private int id = 0;
         public int RedCapturedBlack { get { return redCapturedBlack; } set { redCapturedBlack = value; } }
         public int BlackCapturedRed { get { return blackCapturedRed; } set { blackCapturedRed = value; } }
         public int RedPieces { get { return redPieces; } set { redPieces = value; } }

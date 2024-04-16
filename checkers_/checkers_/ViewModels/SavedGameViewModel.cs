@@ -102,7 +102,8 @@ namespace checkers_.ViewModels
                 for (int j = 0; j < board[i].Count; j++)
                 {
                     Tile c = board[i][j];
-                    TileViewModel tileVM = new TileViewModel(c.Line, c.Column, c.Image, c.TileType, cbl);
+                    //TileViewModel tileVM = new TileViewModel(c.Line, c.Column, c.Image, c.TileType, cbl);
+                    TileViewModel tileVM = new TileViewModel(c.Id, c.Line, c.Column, c.Image, c.TileType, cbl);
                     line.Add(tileVM);
                 }
                 result.Add(line);

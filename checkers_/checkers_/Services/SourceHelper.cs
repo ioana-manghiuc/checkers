@@ -25,6 +25,7 @@ namespace checkers_.Services
         public static int GameID { get; set; }
         public static ObservableCollection<ObservableCollection<Tile>> InitializeGameBoard()
         {
+            int id = 0;
             ObservableCollection<ObservableCollection<Tile>> board = new ObservableCollection<ObservableCollection<Tile>>();
 
             for (int i = 0; i < 8; i++)
@@ -79,7 +80,9 @@ namespace checkers_.Services
                         }
                     }
 
-                    Tile tile = new Tile(i, j, image, type);
+                    Tile tile = new Tile(id, i, j, image, type);
+                    id++;
+                    Console.WriteLine(tile.Id + " " + tile.Line + " " + tile.Column + " " + tile.TileType.ToString());
                     row.Add(tile);
                 }
 
@@ -110,6 +113,7 @@ namespace checkers_.Services
 
         public static ObservableCollection<ObservableCollection<Tile>> RestoreGameBoard(int gameID)
         {
+            int ids = 0;
             ObservableCollection<ObservableCollection<Tile>> board = new ObservableCollection<ObservableCollection<Tile>>();
 
             for (int i = 0; i < 8; i++)
@@ -132,7 +136,9 @@ namespace checkers_.Services
                         type = Tile.ETileType.AlwaysEmpty;
                     }
 
-                    Tile tile = new Tile(i, j, image, type);
+                    Tile tile = new Tile(ids, i, j, image, type);
+                   // Tile tile = new Tile(i, j, image, type);
+                    ids++;
                     row.Add(tile);
                 }
                 board.Add(row);
@@ -147,14 +153,15 @@ namespace checkers_.Services
                 {
                     foreach (var tileNode in gameNode.Elements("Tile"))
                     {
+                       // int id = int.Parse(tileNode.Element("Id").Value);
                         int line = int.Parse(tileNode.Element("Line").Value);
                         int column = int.Parse(tileNode.Element("Column").Value);
                         string tileTypeStr = tileNode.Element("TileType").Value;
 
                         Tile.ETileType type = (Tile.ETileType)Enum.Parse(typeof(Tile.ETileType), tileTypeStr);
                         string image = GetImagePath(type);
-                        Tile tile = new Tile(line, column, image, type);
-
+                        Tile tile = new Tile(board[line][column].Id, line, column, image, type);
+                        Console.WriteLine(tile.Id + " " + tile.Line + " " + tile.Column + " " + tile.TileType.ToString());
                         board[line][column] = tile;
                     }
                 }

@@ -35,7 +35,27 @@ namespace checkers_.Models
             Column = column;
             Image = image;
             TileType = type;
-        }   
+        }
+
+        public Tile(int id, int line, int column, string image, ETileType type)
+        {
+            Id = id;
+            Line = line;
+            Column = column;
+            Image = image;
+            TileType = type;
+        }
+
+        private int id;
+        public int Id
+        {
+            get { return id; }
+            set
+            {
+                id = value;
+                NotifyPropertyChanged("Id");
+            }
+        }
 
         private int line;
         public int Line
